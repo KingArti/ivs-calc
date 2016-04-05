@@ -7,7 +7,7 @@ package CalcLayout;
 
 /**
  *
- * @author goose
+ * @author Michael Švasta, xsvast00@stud.fit.vutbr.cz
  */
 public class Calc extends javax.swing.JFrame {
 
