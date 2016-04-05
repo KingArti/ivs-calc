@@ -6,7 +6,7 @@
 package CalcLayout;
 
 /**
- *
+ * Description: Main class for Calc UI
  * @author Michael Švasta, xsvast00@stud.fit.vutbr.cz
  */
 public class Calc extends javax.swing.JFrame {
