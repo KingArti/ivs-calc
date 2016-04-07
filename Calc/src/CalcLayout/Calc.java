@@ -688,10 +688,10 @@ public class Calc extends javax.swing.JFrame {
             displayAdd(tmpKey);
         }
         else if (tmpKey == '/') {
-            displayAdd(tmpKey);
+            displayAdd('÷');
         }
         else if (tmpKey == '*') {
-            displayAdd(tmpKey);
+            displayAdd('×');
         }
         else if (tmpKey == '-') {
             displayAdd(tmpKey);
