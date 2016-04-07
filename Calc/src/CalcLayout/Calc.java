@@ -5,6 +5,10 @@
  */
 package CalcLayout;
 
+import java.awt.event.KeyEvent;
+
+
+
 /**
  * Description: Main class for Calc UI
  * @author Michael Švasta, xsvast00@stud.fit.vutbr.cz
@@ -28,6 +32,8 @@ public class Calc extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        scroll_display = new javax.swing.JScrollPane();
+        pnl_display = new javax.swing.JPanel();
         lbl_display = new javax.swing.JLabel();
         pnl_keyboard = new javax.swing.JPanel();
         btn_0 = new javax.swing.JButton();
@@ -62,114 +68,385 @@ public class Calc extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Kalkulačka v0.1");
         setResizable(false);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
+
+        scroll_display.setBorder(null);
+
+        pnl_display.setBorder(null);
 
         lbl_display.setBackground(new java.awt.Color(193, 224, 224));
         lbl_display.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         lbl_display.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_display.setText("0123456789");
         lbl_display.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         lbl_display.setOpaque(true);
+        lbl_display.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                lbl_displayResized(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnl_displayLayout = new javax.swing.GroupLayout(pnl_display);
+        pnl_display.setLayout(pnl_displayLayout);
+        pnl_displayLayout.setHorizontalGroup(
+            pnl_displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_displayLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lbl_display, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+        );
+        pnl_displayLayout.setVerticalGroup(
+            pnl_displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_displayLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(lbl_display, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
+
+        scroll_display.setViewportView(pnl_display);
 
         btn_0.setText("0");
         btn_0.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_0.setNextFocusableComponent(btn_point);
+        btn_0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_0ActionPerformed(evt);
+            }
+        });
+        btn_0.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_1.setText("1");
         btn_1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_1.setNextFocusableComponent(btn_2);
+        btn_1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_1ActionPerformed(evt);
+            }
+        });
+        btn_1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_2.setText("2");
         btn_2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_2.setNextFocusableComponent(btn_3);
+        btn_2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_2ActionPerformed(evt);
+            }
+        });
+        btn_2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_3.setText("3");
         btn_3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_3.setNextFocusableComponent(btn_0);
+        btn_3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_3ActionPerformed(evt);
+            }
+        });
+        btn_3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_4.setText("4");
         btn_4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_4.setNextFocusableComponent(btn_5);
+        btn_4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_4ActionPerformed(evt);
+            }
+        });
+        btn_4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_5.setText("5");
         btn_5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_5.setNextFocusableComponent(btn_6);
+        btn_5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_5ActionPerformed(evt);
+            }
+        });
+        btn_5.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_6.setText("6");
         btn_6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_6.setNextFocusableComponent(btn_1);
+        btn_6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_6ActionPerformed(evt);
+            }
+        });
+        btn_6.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_7.setText("7");
         btn_7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_7.setNextFocusableComponent(btn_8);
+        btn_7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_7ActionPerformed(evt);
+            }
+        });
+        btn_7.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_8.setText("8");
         btn_8.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_8.setNextFocusableComponent(btn_9);
+        btn_8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_8ActionPerformed(evt);
+            }
+        });
+        btn_8.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_9.setText("9");
         btn_9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_9.setNextFocusableComponent(btn_4);
+        btn_9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_9ActionPerformed(evt);
+            }
+        });
+        btn_9.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_point.setText(",");
         btn_point.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_point.setNextFocusableComponent(btn_neg);
+        btn_point.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_pointActionPerformed(evt);
+            }
+        });
+        btn_point.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_mul.setText("×");
         btn_mul.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_mul.setNextFocusableComponent(btn_div);
+        btn_mul.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_mulActionPerformed(evt);
+            }
+        });
+        btn_mul.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_div.setText("÷");
         btn_div.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_div.setNextFocusableComponent(btn_add);
+        btn_div.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_divActionPerformed(evt);
+            }
+        });
+        btn_div.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_sub.setText("−");
         btn_sub.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_sub.setNextFocusableComponent(btn_equal);
+        btn_sub.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_subActionPerformed(evt);
+            }
+        });
+        btn_sub.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_add.setText("+");
         btn_add.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_add.setNextFocusableComponent(btn_sub);
+        btn_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_addActionPerformed(evt);
+            }
+        });
+        btn_add.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_neg.setText("+/-");
         btn_neg.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_neg.setNextFocusableComponent(btn_back);
+        btn_neg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_negActionPerformed(evt);
+            }
+        });
+        btn_neg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_equal.setText("=");
         btn_equal.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_equal.setNextFocusableComponent(btn_exp);
+        btn_equal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_equalActionPerformed(evt);
+            }
+        });
+        btn_equal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_clear.setText("C");
         btn_clear.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_clear.setNextFocusableComponent(btn_mul);
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
+        btn_clear.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_back.setText("←");
         btn_back.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_back.setNextFocusableComponent(btn_clear);
+        btn_back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_backActionPerformed(evt);
+            }
+        });
+        btn_back.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_exp.setText("xʸ");
         btn_exp.setToolTipText("umocnění x na y");
         btn_exp.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_exp.setNextFocusableComponent(btn_sqrt);
+        btn_exp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_expActionPerformed(evt);
+            }
+        });
+        btn_exp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_sqrt.setText("√x");
         btn_sqrt.setToolTipText("Druhá odmocnina x");
         btn_sqrt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_sqrt.setNextFocusableComponent(btn_fac);
+        btn_sqrt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_sqrtActionPerformed(evt);
+            }
+        });
+        btn_sqrt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_fac.setText("n!");
         btn_fac.setToolTipText("Faktoriál n");
         btn_fac.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_fac.setNextFocusableComponent(btn_abs);
+        btn_fac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_facActionPerformed(evt);
+            }
+        });
+        btn_fac.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_pi.setText("π");
         btn_pi.setToolTipText("Pí");
         btn_pi.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_pi.setNextFocusableComponent(btn_7);
+        btn_pi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_piActionPerformed(evt);
+            }
+        });
+        btn_pi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         btn_abs.setText("|x|");
         btn_abs.setToolTipText("Absolutní hodnota x");
         btn_abs.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_abs.setNextFocusableComponent(btn_pi);
+        btn_abs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_absActionPerformed(evt);
+            }
+        });
+        btn_abs.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CalcKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnl_keyboardLayout = new javax.swing.GroupLayout(pnl_keyboard);
         pnl_keyboard.setLayout(pnl_keyboardLayout);
@@ -290,25 +567,170 @@ public class Calc extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnl_keyboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_display, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(12, 12, 12))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scroll_display, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnl_keyboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbl_display, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pnl_keyboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(12, 12, 12))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(scroll_display, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnl_keyboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_1ActionPerformed
+        displayAdd('1');
+    }//GEN-LAST:event_btn_1ActionPerformed
+
+    private void btn_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_0ActionPerformed
+        displayAdd('0');
+    }//GEN-LAST:event_btn_0ActionPerformed
+
+    private void btn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_2ActionPerformed
+        displayAdd('2');
+    }//GEN-LAST:event_btn_2ActionPerformed
+
+    private void btn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_3ActionPerformed
+        displayAdd('3');
+    }//GEN-LAST:event_btn_3ActionPerformed
+
+    private void btn_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_4ActionPerformed
+        displayAdd('4');
+    }//GEN-LAST:event_btn_4ActionPerformed
+
+    private void btn_5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_5ActionPerformed
+        displayAdd('5');
+    }//GEN-LAST:event_btn_5ActionPerformed
+
+    private void btn_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_6ActionPerformed
+        displayAdd('6');
+    }//GEN-LAST:event_btn_6ActionPerformed
+
+    private void btn_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_7ActionPerformed
+        displayAdd('7');
+    }//GEN-LAST:event_btn_7ActionPerformed
+
+    private void btn_8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_8ActionPerformed
+        displayAdd('8');
+    }//GEN-LAST:event_btn_8ActionPerformed
+
+    private void btn_9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_9ActionPerformed
+        displayAdd('9');
+    }//GEN-LAST:event_btn_9ActionPerformed
+
+    private void btn_pointActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pointActionPerformed
+        displayAdd(',');
+    }//GEN-LAST:event_btn_pointActionPerformed
+
+    private void btn_negActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_negActionPerformed
+        
+    }//GEN-LAST:event_btn_negActionPerformed
+
+    private void btn_mulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mulActionPerformed
+        displayAdd('×');
+    }//GEN-LAST:event_btn_mulActionPerformed
+
+    private void btn_divActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_divActionPerformed
+        displayAdd('÷');
+    }//GEN-LAST:event_btn_divActionPerformed
+
+    private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
+        displayAdd('+');
+    }//GEN-LAST:event_btn_addActionPerformed
+
+    private void btn_subActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_subActionPerformed
+        displayAdd('−');
+    }//GEN-LAST:event_btn_subActionPerformed
+
+    private void btn_equalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_equalActionPerformed
+        
+    }//GEN-LAST:event_btn_equalActionPerformed
+
+    private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
+        displayClear(false);
+    }//GEN-LAST:event_btn_backActionPerformed
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        displayClear(true);
+    }//GEN-LAST:event_btn_clearActionPerformed
+
+    private void btn_expActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_expActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_expActionPerformed
+
+    private void btn_sqrtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sqrtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_sqrtActionPerformed
+
+    private void btn_facActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_facActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_facActionPerformed
+
+    private void btn_absActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_absActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_absActionPerformed
+
+    private void btn_piActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_piActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_piActionPerformed
+
+    private void CalcKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CalcKeyPressed
+        char tmpKey = evt.getKeyChar();
+        if(Character.isDigit(tmpKey)) {
+            displayAdd(tmpKey);
+        }
+        else if (tmpKey == '/') {
+            displayAdd(tmpKey);
+        }
+        else if (tmpKey == '*') {
+            displayAdd(tmpKey);
+        }
+        else if (tmpKey == '-') {
+            displayAdd(tmpKey);
+        }
+        else if (tmpKey == '+') {
+            displayAdd(tmpKey);
+        }
+        else if (tmpKey == '.' || tmpKey == ',') {
+            displayAdd(tmpKey);
+        }  
+        else if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            displayClear(false);
+        }
+    }//GEN-LAST:event_CalcKeyPressed
+
+    private void lbl_displayResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_lbl_displayResized
+        scroll_display.getHorizontalScrollBar().setValue(scroll_display.getHorizontalScrollBar().getMaximum());
+    }//GEN-LAST:event_lbl_displayResized
+
+    private void displayAdd(char value){   
+        //System.out.println("first: " + scroll_display.getHorizontalScrollBar().getMaximum());
+        String displayText = lbl_display.getText();
+        displayText += Character.toString(value);
+        lbl_display.setText(displayText);
+    }
+    
+    private void displayClear(boolean all){
+        String tmpText = lbl_display.getText();
+        if (all)
+            lbl_display.setText("");
+        else if (!tmpText.isEmpty()) {            
+            String displayText = tmpText.substring(0, tmpText.length()-1);
+            lbl_display.setText(displayText);
+        }
+        
+        
+    }
+            
+    
     /**
      * @param args the command line arguments
      */
@@ -374,6 +796,8 @@ public class Calc extends javax.swing.JFrame {
     private javax.swing.JButton btn_sqrt;
     private javax.swing.JButton btn_sub;
     private javax.swing.JLabel lbl_display;
+    private javax.swing.JPanel pnl_display;
     private javax.swing.JPanel pnl_keyboard;
+    private javax.swing.JScrollPane scroll_display;
     // End of variables declaration//GEN-END:variables
 }
