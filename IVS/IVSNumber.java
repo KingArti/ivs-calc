@@ -3,32 +3,63 @@ package IVS;
 /**
  * @file IVSNumber.java
  * @author Tom
- * @version 1.0
+ * @version 1.1
  * Represents universal number for math library. Handles all necessary conversions, so no special data types are required
  *
  */
 public class IVSNumber {
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		}
+		if (o instanceof IVSNumber) {
+			IVSNumber q = (IVSNumber) o;
+			if (q.isDouble()) {
+				if (this.isDouble()) {
+					if (Double.isInfinite(q.getDoubleValue())) {
+						return Double.isInfinite(this.getDoubleValue());
+					} else if (Double.isNaN(q.getDoubleValue())) {
+						return Double.isNaN(this.getDoubleValue());
+					} else {
+						return q.getDoubleValue() == this.getDoubleValue();
+					}
+				} else {
+					return q.getDoubleValue() == this.getIntValue();
+				}
+			} else {
+				if (this.isInteger()) {
+					return q.getIntValue() == this.getIntValue();
+				} else {
+					return q.getIntValue() == this.getDoubleValue();
+				}
+			}
+		} else {
+			return super.equals(o);
+		}
+	}
+
 	/**
 	 * The type of the value
 	 */
 	private TYPE type = TYPE.INT;
-	
+
 	/**
 	 * Contains integer value, if given
 	 */
 	private int intValue = 0;
-	
+
 	/**
 	 * Contains double value, if given
 	 */
 	private double doubleValue = 0d;
-	
+
 	/**
 	 * Contains invalid value, if constructor fails
 	 */
 	private String invalidValue = "";
-	
+
 	/**
 	 * Contains base of the value, if based integer is given
 	 */
@@ -55,7 +86,7 @@ public class IVSNumber {
 	 * @return True of value is regular integer, False otherwise
 	 */
 	protected boolean isInteger() {
-		return type == TYPE.INT;
+		return type == TYPE.INT || type == TYPE.INT_BASE;
 	}
 
 	/**
@@ -104,6 +135,26 @@ public class IVSNumber {
 	 */
 	public String getInvalidValue() {
 		return invalidValue;
+	}
+
+	/**
+	 * IVSNumber constructor for integer values
+	 * This does the same thing as regular constructor, but never throws an exception
+	 * @param Value Integer value to be stored
+	 */
+	public IVSNumber(int Value) {
+		intValue = Value;
+		type = TYPE.INT;
+	}
+
+	/**
+	 * IVSNumber constructor for double values
+	 * This does the same thing as regular constructor, but never throws an exception
+	 * @param Value Double value to be stored
+	 */
+	public IVSNumber(double Value) {
+		doubleValue = Value;
+		type = TYPE.DOUBLE;
 	}
 
 	/**
@@ -164,7 +215,7 @@ public class IVSNumber {
 	 */
 	public class IVSNumberException extends Exception {
 		private static final long serialVersionUID = -4482955270457081733L;
-		
+
 		/**
 		 * IVSNumber that raised the exception
 		 */
