@@ -6,18 +6,69 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="btn_edit">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#xda;pravy"/>
+            <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="btn_mode">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Re&#x17e;im"/>
-          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="mi_undo">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Z"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Undo"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mi_undoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mi_redo">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Shift+Ctrl+Z"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Redo"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mi_redoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mi_copy">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+C"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Copy"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mi_copyActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mi_paste">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+V"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Paste"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mi_pasteActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="btn_help">
           <Properties>
-            <Property name="text" type="java.lang.String" value="N&#xe1;pov&#x11b;da"/>
+            <Property name="text" type="java.lang.String" value="Help"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="mi_about">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="About"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mi_aboutActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
       </SubComponents>
     </Menu>
@@ -383,7 +434,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="btn_point">
           <Properties>
-            <Property name="text" type="java.lang.String" value=","/>
+            <Property name="text" type="java.lang.String" value="."/>
+            <Property name="toolTipText" type="java.lang.String" value="Decimal point"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -464,6 +516,7 @@
         <Component class="javax.swing.JButton" name="btn_neg">
           <Properties>
             <Property name="text" type="java.lang.String" value="+/-"/>
+            <Property name="toolTipText" type="java.lang.String" value="Negation"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -528,7 +581,7 @@
         <Component class="javax.swing.JButton" name="btn_exp">
           <Properties>
             <Property name="text" type="java.lang.String" value="x&#x2b8;"/>
-            <Property name="toolTipText" type="java.lang.String" value="umocn&#x11b;n&#xed; x na y"/>
+            <Property name="toolTipText" type="java.lang.String" value="Exponentiation"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -545,7 +598,7 @@
         <Component class="javax.swing.JButton" name="btn_sqrt">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x221a;x"/>
-            <Property name="toolTipText" type="java.lang.String" value="Druh&#xe1; odmocnina x"/>
+            <Property name="toolTipText" type="java.lang.String" value="Square root"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -562,7 +615,7 @@
         <Component class="javax.swing.JButton" name="btn_fac">
           <Properties>
             <Property name="text" type="java.lang.String" value="n!"/>
-            <Property name="toolTipText" type="java.lang.String" value="Faktori&#xe1;l n"/>
+            <Property name="toolTipText" type="java.lang.String" value="Factorial"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -579,7 +632,7 @@
         <Component class="javax.swing.JButton" name="btn_pi">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x3c0;"/>
-            <Property name="toolTipText" type="java.lang.String" value="P&#xed;"/>
+            <Property name="toolTipText" type="java.lang.String" value="Pi value"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -596,7 +649,7 @@
         <Component class="javax.swing.JButton" name="btn_abs">
           <Properties>
             <Property name="text" type="java.lang.String" value="|x|"/>
-            <Property name="toolTipText" type="java.lang.String" value="Absolutn&#xed; hodnota x"/>
+            <Property name="toolTipText" type="java.lang.String" value="Absolute value"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -645,7 +698,7 @@
         <Component class="javax.swing.JButton" name="btn_hex">
           <Properties>
             <Property name="text" type="java.lang.String" value="hex"/>
-            <Property name="toolTipText" type="java.lang.String" value="&#x160;estn&#xe1;ckov&#xe1; soustava"/>
+            <Property name="toolTipText" type="java.lang.String" value="Hexadecimal mode"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -662,7 +715,7 @@
         <Component class="javax.swing.JButton" name="btn_dec">
           <Properties>
             <Property name="text" type="java.lang.String" value="dec"/>
-            <Property name="toolTipText" type="java.lang.String" value="Des&#xed;tkov&#xe1; soustava"/>
+            <Property name="toolTipText" type="java.lang.String" value="Decimal mode"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -679,7 +732,7 @@
         <Component class="javax.swing.JButton" name="btn_bin">
           <Properties>
             <Property name="text" type="java.lang.String" value="bin"/>
-            <Property name="toolTipText" type="java.lang.String" value="Bin&#xe1;rn&#xed; soustava"/>
+            <Property name="toolTipText" type="java.lang.String" value="Binary mode"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -705,6 +758,7 @@
       </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_displayKeyPressed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_displayKeyReleased"/>
       </Events>
     </Component>
   </SubComponents>

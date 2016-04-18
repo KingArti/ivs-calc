@@ -11,6 +11,8 @@ import java.awt.event.KeyEvent;
 import IVS.IVSMath;
 import IVS.IVSMathImpl;
 import IVS.IVSNumber;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 
@@ -22,7 +24,8 @@ import javax.swing.JOptionPane;
 public class Calc extends javax.swing.JFrame {
     IVSMath math = new IVSMathImpl();    
     private static final IVSNumber numberNeg = new IVSNumber(-1);
-    boolean isAnswer = false;
+    boolean isAnswer = false;      
+    boolean wasAnswer = false;
     private enum Base { 
         bin(2), dec(10), hex(16);
         
@@ -37,6 +40,145 @@ public class Calc extends javax.swing.JFrame {
     }
     
     Base base = Base.dec;
+    boolean isCtrlActive = false;
+    String tmpDisplay = "";
+    
+    /**
+     * Stack of undo actions
+     */
+    private final List<String> stackUndo = new ArrayList<>();  
+    /**
+    * Push string to stack of undo
+    * @param String String to be pushed into stack
+    */
+    private void pushUndo(String displayText) {
+	stackUndo.add(displayText);
+        pushUndoAnswer(isAnswer);
+    }
+
+    /**
+     * Pops string from stack of undo
+     * @return String from top of stack
+     */
+    private String popUndo() {
+        if (stackUndo.isEmpty())
+            return "";
+        
+        //remove top of stack
+        String tmp = stackUndo.remove(stackUndo.size() - 1);
+        tmpDisplay = tmp;   //save removed item
+        
+        //get text of display
+        String tmpDisplay = txt_display.getText();
+        if (tmpDisplay != popRedoNotRemove())   //display's text isn't same as top of stack
+            pushRedo(tmpDisplay);
+        
+        isAnswer = popUndoAnswer();
+        
+        return tmp;
+    }
+    
+     /**
+     * Pops string from stack of undo without remove
+     * @return String from top of stack
+     */
+    private String popUndoNotRemove() {
+        if (stackUndo.isEmpty())
+            return "";
+        
+        return stackUndo.get(stackUndo.size()-1);
+    }
+    
+    /**
+     * Stack of redo actions
+     */
+    private final List<String> stackRedo = new ArrayList<>();  
+    /**
+    * Push string to stack of redo
+    * @param String String to be pushed into stack
+    */
+    private void pushRedo(String displayText) {
+	stackRedo.add(displayText);
+        pushRedoAnswer(isAnswer);
+        System.out.println("pushRedo: " + displayText);
+    }
+
+    /**
+     * Pops string from stack of redo
+     * @return String from top of stack
+     */
+    private String popRedo() {
+        if (stackRedo.isEmpty())
+            return txt_display.getText();
+        
+        //remove top of stack
+        String tmp = stackRedo.remove(stackRedo.size() - 1);
+        tmpDisplay = tmp;
+        
+        //get text of display
+        String tmpDisplay = txt_display.getText();
+        if (tmpDisplay != popUndoNotRemove())   //display's text isn't same as top of stack
+            pushUndo(tmpDisplay);
+        isAnswer = popRedoAnswer();
+        return tmp;
+    }
+    
+    /**
+     * Pops string from stack of redo without remove
+     * @return String from top of stack
+     */
+    private String popRedoNotRemove() {
+        if (stackRedo.isEmpty())
+            return txt_display.getText();
+        return stackRedo.get(stackRedo.size() - 1);
+    }
+    
+
+    /**
+     * Status of display for removing answer for undo action
+     */
+    private final List<Boolean> stackUndoAnswer = new ArrayList<>();  
+    /**
+    * Push boolean to stack of answer of undo
+    * @param Boolean Boolean to be pushed into stack
+    */
+    private void pushUndoAnswer(Boolean answer) {
+	stackUndoAnswer.add(answer);
+    }
+
+    /**
+     * Pops answer from stack of answer of undo
+     * @return Answer from top of stack
+     */
+    private Boolean popUndoAnswer() {
+        if (stackUndoAnswer.isEmpty())
+            return false;
+        
+        return stackUndoAnswer.remove(stackUndoAnswer.size() - 1);
+    }
+    
+    /**
+     * Status of display for removing answer for redo action
+     */
+    private final List<Boolean> stackRedoAnswer = new ArrayList<>();  
+    /**
+    * Push boolean to stack of answer of redo
+    * @param Boolean Boolean to be pushed into stack
+    */
+    private void pushRedoAnswer(Boolean answer) {
+	stackRedoAnswer.add(answer);
+    }
+
+    /**
+     * Pops answer from stack of answer of redo
+     * @return Answer from top of stack
+     */
+    private Boolean popRedoAnswer() {
+        if (stackRedoAnswer.isEmpty())
+            return false;
+        
+        return stackRedoAnswer.remove(stackRedoAnswer.size() - 1);
+    }
     
     /**
      * Creates new form Calc
@@ -89,8 +231,12 @@ public class Calc extends javax.swing.JFrame {
         txt_display = new javax.swing.JTextField();
         bar_mainMenu = new javax.swing.JMenuBar();
         btn_edit = new javax.swing.JMenu();
-        btn_mode = new javax.swing.JMenu();
+        mi_undo = new javax.swing.JMenuItem();
+        mi_redo = new javax.swing.JMenuItem();
+        mi_copy = new javax.swing.JMenuItem();
+        mi_paste = new javax.swing.JMenuItem();
         btn_help = new javax.swing.JMenu();
+        mi_about = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Kalkulačka v0.1");
@@ -186,7 +332,8 @@ public class Calc extends javax.swing.JFrame {
             }
         });
 
-        btn_point.setText(",");
+        btn_point.setText(".");
+        btn_point.setToolTipText("Decimal point");
         btn_point.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_point.setNextFocusableComponent(btn_neg);
         btn_point.addActionListener(new java.awt.event.ActionListener() {
@@ -232,6 +379,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_neg.setText("+/-");
+        btn_neg.setToolTipText("Negation");
         btn_neg.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_neg.setNextFocusableComponent(btn_back);
         btn_neg.addActionListener(new java.awt.event.ActionListener() {
@@ -268,7 +416,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_exp.setText("xʸ");
-        btn_exp.setToolTipText("umocnění x na y");
+        btn_exp.setToolTipText("Exponentiation");
         btn_exp.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_exp.setNextFocusableComponent(btn_sqrt);
         btn_exp.addActionListener(new java.awt.event.ActionListener() {
@@ -278,7 +426,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_sqrt.setText("√x");
-        btn_sqrt.setToolTipText("Druhá odmocnina x");
+        btn_sqrt.setToolTipText("Square root");
         btn_sqrt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_sqrt.setNextFocusableComponent(btn_fac);
         btn_sqrt.addActionListener(new java.awt.event.ActionListener() {
@@ -288,7 +436,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_fac.setText("n!");
-        btn_fac.setToolTipText("Faktoriál n");
+        btn_fac.setToolTipText("Factorial");
         btn_fac.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_fac.setNextFocusableComponent(btn_abs);
         btn_fac.addActionListener(new java.awt.event.ActionListener() {
@@ -298,7 +446,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_pi.setText("π");
-        btn_pi.setToolTipText("Pí");
+        btn_pi.setToolTipText("Pi value");
         btn_pi.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_pi.setNextFocusableComponent(btn_7);
         btn_pi.addActionListener(new java.awt.event.ActionListener() {
@@ -308,7 +456,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_abs.setText("|x|");
-        btn_abs.setToolTipText("Absolutní hodnota x");
+        btn_abs.setToolTipText("Absolute value");
         btn_abs.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_abs.setNextFocusableComponent(btn_pi);
         btn_abs.addActionListener(new java.awt.event.ActionListener() {
@@ -336,7 +484,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_hex.setText("hex");
-        btn_hex.setToolTipText("Šestnácková soustava");
+        btn_hex.setToolTipText("Hexadecimal mode");
         btn_hex.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_hex.setNextFocusableComponent(btn_abs);
         btn_hex.addActionListener(new java.awt.event.ActionListener() {
@@ -346,7 +494,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_dec.setText("dec");
-        btn_dec.setToolTipText("Desítková soustava");
+        btn_dec.setToolTipText("Decimal mode");
         btn_dec.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_dec.setNextFocusableComponent(btn_fac);
         btn_dec.addActionListener(new java.awt.event.ActionListener() {
@@ -356,7 +504,7 @@ public class Calc extends javax.swing.JFrame {
         });
 
         btn_bin.setText("bin");
-        btn_bin.setToolTipText("Binární soustava");
+        btn_bin.setToolTipText("Binary mode");
         btn_bin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_bin.setNextFocusableComponent(btn_sqrt);
         btn_bin.addActionListener(new java.awt.event.ActionListener() {
@@ -492,15 +640,61 @@ public class Calc extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_displayKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_displayKeyReleased(evt);
+            }
         });
 
-        btn_edit.setText("Úpravy");
+        btn_edit.setText("Edit");
+
+        mi_undo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        mi_undo.setText("Undo");
+        mi_undo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_undoActionPerformed(evt);
+            }
+        });
+        btn_edit.add(mi_undo);
+
+        mi_redo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mi_redo.setText("Redo");
+        mi_redo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_redoActionPerformed(evt);
+            }
+        });
+        btn_edit.add(mi_redo);
+
+        mi_copy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        mi_copy.setText("Copy");
+        mi_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_copyActionPerformed(evt);
+            }
+        });
+        btn_edit.add(mi_copy);
+
+        mi_paste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        mi_paste.setText("Paste");
+        mi_paste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_pasteActionPerformed(evt);
+            }
+        });
+        btn_edit.add(mi_paste);
+
         bar_mainMenu.add(btn_edit);
 
-        btn_mode.setText("Režim");
-        bar_mainMenu.add(btn_mode);
+        btn_help.setText("Help");
 
-        btn_help.setText("Nápověda");
+        mi_about.setText("About");
+        mi_about.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_aboutActionPerformed(evt);
+            }
+        });
+        btn_help.add(mi_about);
+
         bar_mainMenu.add(btn_help);
 
         setJMenuBar(bar_mainMenu);
@@ -641,13 +835,24 @@ public class Calc extends javax.swing.JFrame {
     private void txt_displayKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_displayKeyPressed
         checkEmptyDisplay();
         
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            calculate();
-        }  
-        else if(evt.getKeyCode() != KeyEvent.VK_SHIFT && evt.getKeyCode() != KeyEvent.VK_ALT_GRAPH)
-            checkAnswer(evt.getKeyChar());
+        if (evt.getKeyCode() == KeyEvent.VK_CONTROL)
+            isCtrlActive = true;      
+        else if (!isCtrlActive) {
+            pushUndo(txt_display.getText()); 
+            stackRedo.clear();
         
-        
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                calculate();
+            }  
+            else if(evt.getKeyCode() != KeyEvent.VK_SHIFT && evt.getKeyCode() != KeyEvent.VK_ALT_GRAPH)
+                checkAnswer(evt.getKeyChar());
+        }
+        else {
+            if(evt.getKeyCode() == KeyEvent.VK_V) {                
+                checkAnswer('a');
+            }
+        }
+               
     }//GEN-LAST:event_txt_displayKeyPressed
 
     private void btn_rightBracketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_rightBracketActionPerformed
@@ -673,10 +878,38 @@ public class Calc extends javax.swing.JFrame {
         txt_display.requestFocus();
     }//GEN-LAST:event_btn_binActionPerformed
 
+    private void mi_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_undoActionPerformed
+        txt_display.setText(popUndo());
+    }//GEN-LAST:event_mi_undoActionPerformed
+
+    private void mi_redoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_redoActionPerformed
+        txt_display.setText(popRedo());
+    }//GEN-LAST:event_mi_redoActionPerformed
+
+    private void txt_displayKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_displayKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_CONTROL)
+            isCtrlActive = false;
+    }//GEN-LAST:event_txt_displayKeyReleased
+
+    private void mi_pasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_pasteActionPerformed
+        checkAnswer('a');
+        txt_display.paste();
+    }//GEN-LAST:event_mi_pasteActionPerformed
+
+    private void mi_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_copyActionPerformed
+        txt_display.copy();
+    }//GEN-LAST:event_mi_copyActionPerformed
+
+    private void mi_aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_aboutActionPerformed
+        JOptionPane.showMessageDialog(this, "This is calculator created for IVS.\n\nAuthor(s): \nZnebejánek Tomáš\nŠvasta Michael\nBuchta Martin\nSichkaruk Roman \n\n\n© 2016", "About Calc v0.1", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_mi_aboutActionPerformed
+
     private void displayAdd(char value){   
         //System.out.println("print: " );
         checkAnswer(value);
         String displayText = txt_display.getText();
+        pushUndo(displayText);
+        stackRedo.clear();
         displayText += Character.toString(value);
         txt_display.setText(displayText);
         txt_display.requestFocus();
@@ -684,6 +917,8 @@ public class Calc extends javax.swing.JFrame {
     
     private void displayClear(boolean all){
         String tmpText = txt_display.getText();
+        pushUndo(tmpText);
+        stackRedo.clear();
         if (all) {
             txt_display.setText("");
         }
@@ -692,6 +927,7 @@ public class Calc extends javax.swing.JFrame {
             txt_display.setText(displayText);
         }
         checkEmptyDisplay();
+        txt_display.requestFocus();
     }
     
     private void checkEmptyDisplay(){
@@ -798,7 +1034,6 @@ public class Calc extends javax.swing.JFrame {
     private javax.swing.JMenu btn_help;
     private javax.swing.JButton btn_hex;
     private javax.swing.JButton btn_leftBracket;
-    private javax.swing.JMenu btn_mode;
     private javax.swing.JButton btn_mul;
     private javax.swing.JButton btn_neg;
     private javax.swing.JButton btn_pi;
@@ -806,6 +1041,11 @@ public class Calc extends javax.swing.JFrame {
     private javax.swing.JButton btn_rightBracket;
     private javax.swing.JButton btn_sqrt;
     private javax.swing.JButton btn_sub;
+    private javax.swing.JMenuItem mi_about;
+    private javax.swing.JMenuItem mi_copy;
+    private javax.swing.JMenuItem mi_paste;
+    private javax.swing.JMenuItem mi_redo;
+    private javax.swing.JMenuItem mi_undo;
     private javax.swing.JPanel pnl_keyboard;
     private javax.swing.JTextField txt_display;
     // End of variables declaration//GEN-END:variables

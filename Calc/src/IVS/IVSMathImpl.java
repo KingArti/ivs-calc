@@ -24,7 +24,7 @@ public class IVSMathImpl implements IVSMath {
 				if (innerValue.isInteger()) {
 					innerValue = new IVSNumber(innerValue.getIntValue() + value.getIntValue());
 				} else {
-					innerValue = new IVSNumber(((double) innerValue.getIntValue()) + value.getDoubleValue());
+					innerValue = new IVSNumber(innerValue.getDoubleValue() + ((double) value.getIntValue()));
 				}
 			} else {
 				if (innerValue.isInteger()) {
@@ -43,7 +43,7 @@ public class IVSMathImpl implements IVSMath {
 				if (innerValue.isInteger()) {
 					innerValue = new IVSNumber(innerValue.getIntValue() - value.getIntValue());
 				} else {
-					innerValue = new IVSNumber(((double) innerValue.getIntValue()) - value.getDoubleValue());
+					innerValue = new IVSNumber(innerValue.getDoubleValue() - ((double) value.getIntValue()));
 				}
 			} else {
 				if (innerValue.isInteger()) {
@@ -62,7 +62,7 @@ public class IVSMathImpl implements IVSMath {
 				if (innerValue.isInteger()) {
 					innerValue = new IVSNumber(innerValue.getIntValue() * value.getIntValue());
 				} else {
-					innerValue = new IVSNumber(((double) innerValue.getIntValue()) * value.getDoubleValue());
+					innerValue = new IVSNumber(innerValue.getDoubleValue() * ((double) value.getIntValue()));
 				}
 			} else {
 				if (innerValue.isInteger()) {
@@ -84,7 +84,7 @@ public class IVSMathImpl implements IVSMath {
 				if (innerValue.isInteger()) {
 					innerValue = new IVSNumber(innerValue.getIntValue() / value.getIntValue());
 				} else {
-					innerValue = new IVSNumber(((double) innerValue.getIntValue()) / value.getDoubleValue());
+					innerValue = new IVSNumber(innerValue.getDoubleValue() / ((double) value.getIntValue()));
 				}
 			} else {
 				if (value.getDoubleValue() == 0) {
@@ -195,19 +195,19 @@ public class IVSMathImpl implements IVSMath {
 	@Override
 	public void calculateFormula(String formula, int base) throws IVSNegativeValueException, IVSDivisionByZeroException, IVSInvalidFormulaException {
 		IntegerFormulaParser parser = new IntegerFormulaParser(formula, base);
-		int result;
+		IVSNumber result;
 		if (base <= 0) {
 			throw new IVSNegativeValueException();
 		}
 		try {
 			result = parser.getResult();
 			if (base == 10) {
-				innerValue = new IVSNumber(result);
+				innerValue = result;
 			} else {
 				try {
 					innerValue = new IVSNumber(Integer.toString(base), base);
 				} catch (IVSNumberException e) {
-					innerValue = new IVSNumber(result);
+					innerValue = result;
 				}
 			}
 		} catch (IVSNegativeValueException | IVSDivisionByZeroException | IVSInvalidFormulaException e) {
@@ -215,11 +215,29 @@ public class IVSMathImpl implements IVSMath {
 		}
 	}
 
+	@Override
+	public void pow(IVSNumber value) {
+		if (value != null) {
+			if (value.isInteger()) {
+				if (innerValue.isInteger()) {
+					innerValue = new IVSNumber(Math.pow(innerValue.getIntValue(), value.getIntValue()));
+				} else {
+					innerValue = new IVSNumber(Math.pow((double) innerValue.getIntValue(), value.getDoubleValue()));
+				}
+			} else {
+				if (innerValue.isInteger()) {
+					innerValue = new IVSNumber(Math.pow((double) innerValue.getIntValue(), value.getDoubleValue()));
+				} else {
+					innerValue = new IVSNumber(Math.pow(innerValue.getDoubleValue(), value.getDoubleValue()));
+				}
+			}
+		}
+	}
 }
 
 /**
  * Expression formula parser
- * Note that this only works with Integers!
+ * Note that this only works with Integers with any base OR decadic numbers (base 10)
  * @author Tom
  * @version 1.0
  */
@@ -235,6 +253,11 @@ class IntegerFormulaParser {
 		private static final long serialVersionUID = 6990153259701972424L;
 
 	}
+
+	/**
+	 * Inner calculator
+	 */
+	private final IVSMath lib = new IVSMathImpl();
 
 	/**
 	 * List of tokens
@@ -259,13 +282,13 @@ class IntegerFormulaParser {
 	/**
 	 * Stack structure
 	 */
-	private final List<Integer> stack = new ArrayList<>();
+	private final List<IVSNumber> stack = new ArrayList<>();
 
 	/**
 	 * Push number to stack
 	 * @param number Number to be pushed into stack
 	 */
-	private void push(int number) {
+	private void push(IVSNumber number) {
 		stack.add(number);
 	}
 
@@ -273,7 +296,7 @@ class IntegerFormulaParser {
 	 * Pops number from stack
 	 * @return Integer from top of stack
 	 */
-	private int pop() {
+	private IVSNumber pop() {
 		return stack.remove(stack.size() - 1);
 	}
 
@@ -346,50 +369,41 @@ class IntegerFormulaParser {
 	}
 
 	/**
-	 * Calculates factorial from given number
-	 * @param number Number to be factorial calculated from
-	 * @return Factorial of given number
-	 */
-	private int factorial(int number) {
-		if (number < 0) {
-			throw new IVSNegativeValueException();
-		} else if (number == 0) {
-			return 1;
-		} else {
-			int res = 1;
-			for (int i = number; i > 0; i--) {
-				res *= i;
-			}
-			return res;
-		}
-	}
-
-	/**
 	 * Performs operation
 	 * @param operator Operator
 	 * @param operand1 Operand
 	 * @param operand2 Operand. Note that when calculating factorial, this value is ignored
 	 * @return
+	 * @throws IVSInvalidFormulaException  Thrown when invalid operator is given
 	 */
-	private int handleOperation(String operator, int operand1, int operand2) {
+	private IVSNumber handleOperation(String operator, IVSNumber operand1, IVSNumber operand2) throws IVSInvalidFormulaException {
 		switch (operator) {
 			case "+":
-				return operand1 + operand2;
+				lib.setValue(operand1);
+				lib.add(operand2);
+				return lib.getValue();
 			case "-":
-				return operand1 - operand2;
+				lib.setValue(operand1);
+				lib.sub(operand2);
+				return lib.getValue();
 			case "!":
-				return factorial(operand1);
+				lib.setValue(operand1);
+				lib.fac();
+				return lib.getValue();
 			case "*":
-				return operand1 * operand2;
+				lib.setValue(operand1);
+				lib.mul(operand2);
+				return lib.getValue();
 			case "/":
-				if (operand2 == 0) {
-					throw new IVSDivisionByZeroException();
-				}
-				return operand1 / operand2;
+				lib.setValue(operand1);
+				lib.div(operand2);
+				return lib.getValue();
 			case "^":
-				return (int) Math.pow(operand1, operand2);
+				lib.setValue(operand1);
+				lib.pow(operand2);
+				return lib.getValue();
 			default: // This should never happen
-				return 0;
+				throw new IVSInvalidFormulaException();
 		}
 	}
 
@@ -419,6 +433,11 @@ class IntegerFormulaParser {
 			Integer.parseInt(token, base);
 			return true;
 		} catch (Exception e) {
+			try {
+				Double.parseDouble(token);
+				return true;
+			} catch (Exception ee) {
+			}
 			return false;
 		}
 	}
@@ -428,9 +447,21 @@ class IntegerFormulaParser {
 	 * Note that this doesn't perform type check
 	 * @param token Token to be converter
 	 * @return Integer value of the token number
+	 * @throws IVSInvalidFormulaException Thrown when token is not a number
 	 */
-	private int getNumber(String token) {
-		return Integer.parseInt(token, base);
+	private IVSNumber getNumber(String token) throws IVSInvalidFormulaException {
+		try {
+			return new IVSNumber(Integer.parseInt(token, base));
+		} catch (Exception e) {
+			if (base != 10) {
+				throw new IVSInvalidFormulaException();
+			}
+			try {
+				return new IVSNumber(Double.parseDouble(token));
+			} catch (Exception ee) {
+			}
+		}
+		throw new IVSInvalidFormulaException();
 	}
 
 	/**
@@ -440,7 +471,7 @@ class IntegerFormulaParser {
 	 * @throws IVSDivisionByZeroException Thrown when division by zero occured
 	 * @throws IVSInvalidFormulaException Thrown when formula is not valid
 	 */
-	public int getResult() throws IVSNegativeValueException, IVSDivisionByZeroException, IVSInvalidFormulaException {
+	public IVSNumber getResult() throws IVSNegativeValueException, IVSDivisionByZeroException, IVSInvalidFormulaException {
 		try {
 			boolean b = EXPR();
 			if (b) {
@@ -455,22 +486,23 @@ class IntegerFormulaParser {
 	 * Parser function
 	 * @return True if structure is valid, False if otherwise
 	 * @throws TokenEndException Thrown when end of token list is reached
+	 * @throws IVSInvalidFormulaException Thrown when invalid operator is found
 	 */
-	private boolean EXPR_MORE() throws TokenEndException {
+	private boolean EXPR_MORE() throws TokenEndException, IVSInvalidFormulaException {
 		String token = getToken();
 		if (isOperator(token)) {
-			int op1 = pop();
+			IVSNumber op1 = pop();
 			String op = token;
 			if (op.equals("!")) {
-				int result = handleOperation(op, op1, 0);
+				IVSNumber result = handleOperation(op, op1, new IVSNumber(0));
 				push(result);
 				getNextToken();
 				return EXPR_MORE();
 			} else {
 				getNextToken();
 				if (EXPR()) {
-					int op2 = pop();
-					int result = handleOperation(op, op1, op2);
+					IVSNumber op2 = pop();
+					IVSNumber result = handleOperation(op, op1, op2);
 					push(result);
 					return true;
 				}
@@ -485,8 +517,9 @@ class IntegerFormulaParser {
 	 * Parser function
 	 * @return True if structure is valid, False if otherwise
 	 * @throws TokenEndException Thrown when end of token list is reached
+	 * @throws IVSInvalidFormulaException Thrown when invalid operator is found
 	 */
-	private boolean EXPR() throws TokenEndException {
+	private boolean EXPR() throws TokenEndException, IVSInvalidFormulaException {
 		String token = getToken();
 		int minus = 1;
 		if (token.equals("-")) {
@@ -496,8 +529,10 @@ class IntegerFormulaParser {
 		if (isBracket(token)) {
 			getNextToken();
 			if (EXPR()) {
-				int value = pop();
-				push(minus * value);
+				IVSNumber value = pop();
+				lib.setValue(value);
+				lib.mul(new IVSNumber(minus));
+				push(lib.getValue());
 				token = getToken();
 				if (token.equals(")")) {
 					getNextToken();
@@ -506,8 +541,9 @@ class IntegerFormulaParser {
 			}
 		} else {
 			if (isNumber(token)) {
-				int number = getNumber(token) * minus;
-				push(number);
+				lib.setValue(getNumber(token));
+				lib.mul(new IVSNumber(minus));
+				push(lib.getValue());
 				getNextToken();
 				return EXPR_MORE();
 			}
