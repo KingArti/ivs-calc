@@ -3,8 +3,7 @@ package IVS;
 /**
  * @file IVSMath.java
  * @author Tom
- * @version 1.1
- * @todo Add the rest of the operations
+ * @version 1.2
  * Represents math library interface
  *
  */
@@ -15,6 +14,12 @@ public interface IVSMath {
 	 */
 	public void reset();
 
+	/**
+	 * Calculates power by given value
+	 * @param value Value to be used as exponent
+	 */
+	public void pow(IVSNumber value);
+	
 	/**
 	 * Adds value to inner value
 	 * @param value Value to be added. Note that when null is used, no operation is done.
