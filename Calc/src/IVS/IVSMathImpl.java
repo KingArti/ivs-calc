@@ -373,7 +373,7 @@ class IntegerFormulaParser {
 	 * @param operator Operator
 	 * @param operand1 Operand
 	 * @param operand2 Operand. Note that when calculating factorial, this value is ignored
-	 * @return
+	 * @return IVSNumber value
 	 * @throws IVSInvalidFormulaException  Thrown when invalid operator is given
 	 */
 	private IVSNumber handleOperation(String operator, IVSNumber operand1, IVSNumber operand2) throws IVSInvalidFormulaException {

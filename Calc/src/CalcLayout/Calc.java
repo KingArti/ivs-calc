@@ -15,10 +15,22 @@ import javax.swing.JOptionPane;
  * @author Michael Švasta, xsvast00@stud.fit.vutbr.cz
  */
 public class Calc extends javax.swing.JFrame {
-    IVSMath math = new IVSMathImpl();  //new instance of interface  
-    private static final IVSNumber numberNeg = new IVSNumber(-1);   //-1 for negation of number
-    boolean isAnswer = false;       //status of display, true means answer on display
-    boolean wasAnswer = false;      //last status of display
+    /**
+     * New instance of interface for math library
+     */
+    IVSMath math = new IVSMathImpl();  
+    /**
+     * Internal variable (-1) for negation of value on display
+     */
+    private static final IVSNumber numberNeg = new IVSNumber(-1);  
+    /**
+     * Status of display, true means answer on display
+     */
+    boolean isAnswer = false;       
+    /**
+     * Last status of display
+     */
+    boolean wasAnswer = false;      
     
     /**
      * Base of operations
@@ -36,17 +48,25 @@ public class Calc extends javax.swing.JFrame {
         }
     }
     
-    Base base = Base.dec;       //new instance of base
-    boolean isCtrlActive = false;   //if control is holding
+    /**
+     * New instance of base
+     */
+    Base base = Base.dec;     
+    
+    /**
+     * Status of control key
+     */
+    boolean isCtrlActive = false;   
     
     /**
      * Stack of undo actions
      */
     private final List<String> stackUndo = new ArrayList<>();  
+
     /**
-    * Push string to stack of undo
-    * @param String String to be pushed into stack
-    */
+     * Push string to stack of undo
+     * @param displayText String to be pushed into stack
+     */
     private void pushUndo(String displayText) {
 	stackUndo.add(displayText);
         pushUndoAnswer(isAnswer);
@@ -90,7 +110,7 @@ public class Calc extends javax.swing.JFrame {
     private final List<String> stackRedo = new ArrayList<>();  
     /**
     * Push string to stack of redo
-    * @param String String to be pushed into stack
+    * @param displayText String to be pushed into stack
     */
     private void pushRedo(String displayText) {
 	stackRedo.add(displayText);
@@ -140,7 +160,7 @@ public class Calc extends javax.swing.JFrame {
     private final List<Boolean> stackUndoAnswer = new ArrayList<>();  
     /**
     * Push boolean to stack of answer of undo
-    * @param Boolean Boolean to be pushed into stack
+    * @param answer Boolean to be pushed into stack
     */
     private void pushUndoAnswer(Boolean answer) {
 	stackUndoAnswer.add(answer);
@@ -163,7 +183,7 @@ public class Calc extends javax.swing.JFrame {
     private final List<Boolean> stackRedoAnswer = new ArrayList<>();  
     /**
     * Push boolean to stack of answer of redo
-    * @param Boolean Boolean to be pushed into stack
+    * @param answer Boolean to be pushed into stack
     */
     private void pushRedoAnswer(Boolean answer) {
 	stackRedoAnswer.add(answer);
@@ -244,7 +264,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_0.setText("0");
         btn_0.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_0.setNextFocusableComponent(btn_point);
         btn_0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_0ActionPerformed(evt);
@@ -253,7 +272,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_1.setText("1");
         btn_1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_1.setNextFocusableComponent(btn_2);
         btn_1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_1ActionPerformed(evt);
@@ -262,7 +280,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_2.setText("2");
         btn_2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_2.setNextFocusableComponent(btn_3);
         btn_2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_2ActionPerformed(evt);
@@ -271,7 +288,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_3.setText("3");
         btn_3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_3.setNextFocusableComponent(btn_0);
         btn_3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_3ActionPerformed(evt);
@@ -280,7 +296,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_4.setText("4");
         btn_4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_4.setNextFocusableComponent(btn_5);
         btn_4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_4ActionPerformed(evt);
@@ -289,7 +304,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_5.setText("5");
         btn_5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_5.setNextFocusableComponent(btn_6);
         btn_5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_5ActionPerformed(evt);
@@ -298,7 +312,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_6.setText("6");
         btn_6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_6.setNextFocusableComponent(btn_1);
         btn_6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_6ActionPerformed(evt);
@@ -307,7 +320,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_7.setText("7");
         btn_7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_7.setNextFocusableComponent(btn_8);
         btn_7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_7ActionPerformed(evt);
@@ -316,7 +328,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_8.setText("8");
         btn_8.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_8.setNextFocusableComponent(btn_9);
         btn_8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_8ActionPerformed(evt);
@@ -325,7 +336,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_9.setText("9");
         btn_9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_9.setNextFocusableComponent(btn_4);
         btn_9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_9ActionPerformed(evt);
@@ -335,7 +345,6 @@ public class Calc extends javax.swing.JFrame {
         btn_point.setText(".");
         btn_point.setToolTipText("Decimal point");
         btn_point.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_point.setNextFocusableComponent(btn_neg);
         btn_point.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_pointActionPerformed(evt);
@@ -344,7 +353,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_mul.setText("×");
         btn_mul.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_mul.setNextFocusableComponent(btn_div);
         btn_mul.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_mulActionPerformed(evt);
@@ -353,7 +361,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_div.setText("÷");
         btn_div.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_div.setNextFocusableComponent(btn_add);
         btn_div.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_divActionPerformed(evt);
@@ -362,7 +369,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_sub.setText("−");
         btn_sub.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_sub.setNextFocusableComponent(btn_equal);
         btn_sub.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_subActionPerformed(evt);
@@ -371,7 +377,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_add.setText("+");
         btn_add.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_add.setNextFocusableComponent(btn_sub);
         btn_add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_addActionPerformed(evt);
@@ -381,7 +386,6 @@ public class Calc extends javax.swing.JFrame {
         btn_neg.setText("+/-");
         btn_neg.setToolTipText("Negation");
         btn_neg.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_neg.setNextFocusableComponent(btn_back);
         btn_neg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_negActionPerformed(evt);
@@ -390,7 +394,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_equal.setText("=");
         btn_equal.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_equal.setNextFocusableComponent(btn_exp);
         btn_equal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_equalActionPerformed(evt);
@@ -399,7 +402,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_clear.setText("C");
         btn_clear.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_clear.setNextFocusableComponent(btn_mul);
         btn_clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_clearActionPerformed(evt);
@@ -408,7 +410,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_back.setText("←");
         btn_back.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_back.setNextFocusableComponent(btn_clear);
         btn_back.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_backActionPerformed(evt);
@@ -418,7 +419,6 @@ public class Calc extends javax.swing.JFrame {
         btn_exp.setText("xʸ");
         btn_exp.setToolTipText("Exponentiation");
         btn_exp.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_exp.setNextFocusableComponent(btn_sqrt);
         btn_exp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_expActionPerformed(evt);
@@ -428,7 +428,6 @@ public class Calc extends javax.swing.JFrame {
         btn_sqrt.setText("√x");
         btn_sqrt.setToolTipText("Square root");
         btn_sqrt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_sqrt.setNextFocusableComponent(btn_fac);
         btn_sqrt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_sqrtActionPerformed(evt);
@@ -438,7 +437,6 @@ public class Calc extends javax.swing.JFrame {
         btn_fac.setText("n!");
         btn_fac.setToolTipText("Factorial");
         btn_fac.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_fac.setNextFocusableComponent(btn_abs);
         btn_fac.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_facActionPerformed(evt);
@@ -448,7 +446,6 @@ public class Calc extends javax.swing.JFrame {
         btn_pi.setText("π");
         btn_pi.setToolTipText("Pi value");
         btn_pi.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_pi.setNextFocusableComponent(btn_7);
         btn_pi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_piActionPerformed(evt);
@@ -458,7 +455,6 @@ public class Calc extends javax.swing.JFrame {
         btn_abs.setText("|x|");
         btn_abs.setToolTipText("Absolute value");
         btn_abs.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_abs.setNextFocusableComponent(btn_pi);
         btn_abs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_absActionPerformed(evt);
@@ -467,7 +463,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_rightBracket.setText(")");
         btn_rightBracket.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_rightBracket.setNextFocusableComponent(btn_7);
         btn_rightBracket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_rightBracketActionPerformed(evt);
@@ -476,7 +471,6 @@ public class Calc extends javax.swing.JFrame {
 
         btn_leftBracket.setText("(");
         btn_leftBracket.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_leftBracket.setNextFocusableComponent(btn_pi);
         btn_leftBracket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_leftBracketActionPerformed(evt);
@@ -486,7 +480,6 @@ public class Calc extends javax.swing.JFrame {
         btn_hex.setText("hex");
         btn_hex.setToolTipText("Hexadecimal mode");
         btn_hex.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_hex.setNextFocusableComponent(btn_abs);
         btn_hex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_hexActionPerformed(evt);
@@ -496,7 +489,6 @@ public class Calc extends javax.swing.JFrame {
         btn_dec.setText("dec");
         btn_dec.setToolTipText("Decimal mode");
         btn_dec.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_dec.setNextFocusableComponent(btn_fac);
         btn_dec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_decActionPerformed(evt);
@@ -506,7 +498,6 @@ public class Calc extends javax.swing.JFrame {
         btn_bin.setText("bin");
         btn_bin.setToolTipText("Binary mode");
         btn_bin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_bin.setNextFocusableComponent(btn_sqrt);
         btn_bin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_binActionPerformed(evt);
