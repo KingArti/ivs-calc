@@ -42,7 +42,7 @@
 	</target>
 	
 	<target name="doc">
-		<javadoc sourcepath="${src.dir}" destdir="${doc.dir}" />
+		<javadoc access="private" sourcepath="${src.dir}" destdir="${doc.dir}" />
 	</target>
 	
 	<target name="run">

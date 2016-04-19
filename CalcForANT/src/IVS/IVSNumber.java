@@ -1,7 +1,7 @@
 package IVS;
 
 /**
- * @file IVSNumber.java
+ * 
  * @author Tom
  * @version 1.1
  * Represents universal number for math library. Handles all necessary conversions, so no special data types are required
