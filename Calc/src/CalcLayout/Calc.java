@@ -1102,6 +1102,7 @@ public class Calc extends javax.swing.JFrame {
         else{                                                   //deleting
             tmp = displayText.substring(0, cursorPosition-1);   //first part of display's text without deleting char
             cursorPosition--;                                   //decrement cursor position
+            isAnswer = false;                                   //answer is false
         }            
         
         tmp += tmp2;                                            //add second part to first
