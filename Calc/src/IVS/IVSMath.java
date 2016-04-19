@@ -1,7 +1,7 @@
 package IVS;
 
 /**
- * @file IVSMath.java
+ * 
  * @author Tom
  * @version 1.2
  * Represents math library interface
