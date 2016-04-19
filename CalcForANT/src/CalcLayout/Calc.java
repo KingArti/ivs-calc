@@ -1,11 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package CalcLayout;
-
-
 
 import java.awt.event.KeyEvent;
 import IVS.IVSMath;
@@ -22,10 +15,14 @@ import javax.swing.JOptionPane;
  * @author Michael Švasta, xsvast00@stud.fit.vutbr.cz
  */
 public class Calc extends javax.swing.JFrame {
-    IVSMath math = new IVSMathImpl();    
-    private static final IVSNumber numberNeg = new IVSNumber(-1);
-    boolean isAnswer = false;      
-    boolean wasAnswer = false;
+    IVSMath math = new IVSMathImpl();  //new instance of interface  
+    private static final IVSNumber numberNeg = new IVSNumber(-1);   //-1 for negation of number
+    boolean isAnswer = false;       //status of display, true means answer on display
+    boolean wasAnswer = false;      //last status of display
+    
+    /**
+     * Base of operations
+     */
     private enum Base { 
         bin(2), dec(10), hex(16);
         
@@ -39,9 +36,8 @@ public class Calc extends javax.swing.JFrame {
         }
     }
     
-    Base base = Base.dec;
-    boolean isCtrlActive = false;
-    String tmpDisplay = "";
+    Base base = Base.dec;       //new instance of base
+    boolean isCtrlActive = false;   //if control is holding
     
     /**
      * Stack of undo actions
@@ -66,11 +62,10 @@ public class Calc extends javax.swing.JFrame {
         
         //remove top of stack
         String tmp = stackUndo.remove(stackUndo.size() - 1);
-        tmpDisplay = tmp;   //save removed item
         
         //get text of display
         String tmpDisplay = txt_display.getText();
-        if (tmpDisplay != popRedoNotRemove())   //display's text isn't same as top of stack
+        if (tmpDisplay !=popRedoNotRemove())   //display's text isn't same as top of stack
             pushRedo(tmpDisplay);
         
         isAnswer = popUndoAnswer();
@@ -99,8 +94,7 @@ public class Calc extends javax.swing.JFrame {
     */
     private void pushRedo(String displayText) {
 	stackRedo.add(displayText);
-        pushRedoAnswer(isAnswer);
-        System.out.println("pushRedo: " + displayText);
+        pushRedoAnswer(isAnswer);    
     }
 
     /**
@@ -113,12 +107,12 @@ public class Calc extends javax.swing.JFrame {
         
         //remove top of stack
         String tmp = stackRedo.remove(stackRedo.size() - 1);
-        tmpDisplay = tmp;
-        
+
         //get text of display
         String tmpDisplay = txt_display.getText();
         if (tmpDisplay != popUndoNotRemove())   //display's text isn't same as top of stack
             pushUndo(tmpDisplay);
+        
         isAnswer = popRedoAnswer();
         return tmp;
     }
@@ -133,6 +127,12 @@ public class Calc extends javax.swing.JFrame {
         return stackRedo.get(stackRedo.size() - 1);
     }
     
+    /**
+     * Clear stack of redo
+     */
+    private void clearRedo() {
+        stackRedo.clear();
+    }
 
     /**
      * Status of display for removing answer for undo action
@@ -724,50 +724,98 @@ public class Calc extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Click action of button "1" 
+     * @param evt Action event
+     */
     private void btn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_1ActionPerformed
         displayAdd('1');
     }//GEN-LAST:event_btn_1ActionPerformed
 
+    /**
+     * Click action of button "0" 
+     * @param evt Action event
+     */
     private void btn_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_0ActionPerformed
         displayAdd('0');
     }//GEN-LAST:event_btn_0ActionPerformed
 
+    /**
+     * Click action of button "2" 
+     * @param evt Action event
+     */
     private void btn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_2ActionPerformed
         displayAdd('2');
     }//GEN-LAST:event_btn_2ActionPerformed
 
+    /**
+     * Click action of button "3" 
+     * @param evt Action event
+     */
     private void btn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_3ActionPerformed
         displayAdd('3');
     }//GEN-LAST:event_btn_3ActionPerformed
 
+    /**
+     * Click action of button "4" 
+     * @param evt Action event
+     */
     private void btn_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_4ActionPerformed
         displayAdd('4');
     }//GEN-LAST:event_btn_4ActionPerformed
 
+    /**
+     * Click action of button "5" 
+     * @param evt Action event
+     */
     private void btn_5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_5ActionPerformed
         displayAdd('5');
     }//GEN-LAST:event_btn_5ActionPerformed
 
+    /**
+     * Click action of button "6" 
+     * @param evt Action event
+     */
     private void btn_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_6ActionPerformed
         displayAdd('6');
     }//GEN-LAST:event_btn_6ActionPerformed
 
+    /**
+     * Click action of button "7" 
+     * @param evt Action event
+     */
     private void btn_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_7ActionPerformed
         displayAdd('7');
     }//GEN-LAST:event_btn_7ActionPerformed
 
+    /**
+     * Click action of button "8" 
+     * @param evt Action event
+     */
     private void btn_8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_8ActionPerformed
         displayAdd('8');
     }//GEN-LAST:event_btn_8ActionPerformed
 
+    /**
+     * Click action of button "9" 
+     * @param evt Action event
+     */
     private void btn_9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_9ActionPerformed
         displayAdd('9');        
     }//GEN-LAST:event_btn_9ActionPerformed
 
+    /**
+     * Click action of button "." 
+     * @param evt Action event
+     */
     private void btn_pointActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pointActionPerformed
         displayAdd('.');
     }//GEN-LAST:event_btn_pointActionPerformed
 
+    /**
+     * Click action of button "+/-" 
+     * @param evt Action event
+     */
     private void btn_negActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_negActionPerformed
         calculate();        
         
@@ -775,56 +823,106 @@ public class Calc extends javax.swing.JFrame {
         setDisplay();
     }//GEN-LAST:event_btn_negActionPerformed
 
+    /**
+     * Click action of button "×" 
+     * @param evt Action event
+     */
     private void btn_mulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mulActionPerformed
         displayAdd('*');
     }//GEN-LAST:event_btn_mulActionPerformed
 
+    /**
+     * Click action of button "÷" 
+     * @param evt Action event
+     */
     private void btn_divActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_divActionPerformed
         displayAdd('/');
     }//GEN-LAST:event_btn_divActionPerformed
 
+    /**
+     * Click action of button "+" 
+     * @param evt Action event
+     */
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         displayAdd('+');
     }//GEN-LAST:event_btn_addActionPerformed
 
+    /**
+     * Click action of button "−" 
+     * @param evt Action event
+     */
     private void btn_subActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_subActionPerformed
-        displayAdd('−');
+        displayAdd('-');
     }//GEN-LAST:event_btn_subActionPerformed
 
+    /**
+     * Click action of button "=" 
+     * @param evt Action event
+     */
     private void btn_equalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_equalActionPerformed
+        pushUndo(txt_display.getText());            //push stack of undo actions
+        clearRedo();                                //clear stack of redo actions
         calculate();
     }//GEN-LAST:event_btn_equalActionPerformed
 
+    /**
+     * Click action of button "←" 
+     * @param evt Action event
+     */
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
         displayClear(false);
     }//GEN-LAST:event_btn_backActionPerformed
 
+    /**
+     * Click action of button "C" 
+     * @param evt Action event
+     */
     private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
         displayClear(true);
     }//GEN-LAST:event_btn_clearActionPerformed
 
+    /**
+     * Click action of button "xʸ" 
+     * @param evt Action event
+     */
     private void btn_expActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_expActionPerformed
         displayAdd('^');
     }//GEN-LAST:event_btn_expActionPerformed
 
+    /**
+     * Click action of button "√x" 
+     * @param evt Action event
+     */
     private void btn_sqrtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sqrtActionPerformed
         calculate();
         math.sqrt();
         setDisplay();
     }//GEN-LAST:event_btn_sqrtActionPerformed
 
+    /**
+     * Click action of button "n!" 
+     * @param evt Action event
+     */
     private void btn_facActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_facActionPerformed
         calculate();
         math.fac();
         setDisplay();
     }//GEN-LAST:event_btn_facActionPerformed
 
+    /**
+     * Click action of button "|x|" 
+     * @param evt Action event
+     */
     private void btn_absActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_absActionPerformed
         calculate();
         math.abs();
         setDisplay();
     }//GEN-LAST:event_btn_absActionPerformed
 
+    /**
+     * Click action of button "π" 
+     * @param evt Action event
+     */
     private void btn_piActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_piActionPerformed
         math.setPI();
         String tmp = txt_display.getText() + math.getValue().toString();
@@ -832,132 +930,225 @@ public class Calc extends javax.swing.JFrame {
         txt_display.requestFocus();
     }//GEN-LAST:event_btn_piActionPerformed
 
+    /**
+     * Display's key pressed action
+     * @param evt Key event
+     */
     private void txt_displayKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_displayKeyPressed
-        checkEmptyDisplay();
+        checkEmptyDisplay();    //check, if display is empty for reset math library
         
-        if (evt.getKeyCode() == KeyEvent.VK_CONTROL)
-            isCtrlActive = true;      
-        else if (!isCtrlActive) {
-            pushUndo(txt_display.getText()); 
-            stackRedo.clear();
+        if (evt.getKeyCode() == KeyEvent.VK_CONTROL)    //if ctlr is pressed
+            isCtrlActive = true;                        //boolean is activated
+        else if (!isCtrlActive 
+                && evt.getKeyCode() != KeyEvent.VK_HOME
+                && evt.getKeyCode() != KeyEvent.VK_END
+                && evt.getKeyCode() != KeyEvent.VK_LEFT
+                && evt.getKeyCode() != KeyEvent.VK_RIGHT) { //else if ctrl is not active, and cursor is not moving
+            pushUndo(txt_display.getText());                //push stack of undo actions
+            clearRedo();                                    //clear stack of redo actions
         
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                calculate();
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {    //if enter is pressed
+                calculate();                                //calculate
             }  
-            else if(evt.getKeyCode() != KeyEvent.VK_SHIFT && evt.getKeyCode() != KeyEvent.VK_ALT_GRAPH)
-                checkAnswer(evt.getKeyChar());
+            else if(evt.getKeyCode() != KeyEvent.VK_SHIFT && evt.getKeyCode() != KeyEvent.VK_ALT_GRAPH) //if not pressed shift or alt gr
+                checkAnswer(evt.getKeyChar());      //check, if answer is on display (for actual pressed key)
         }
-        else {
-            if(evt.getKeyCode() == KeyEvent.VK_V) {                
-                checkAnswer('a');
-            }
-        }
-               
+        else if(evt.getKeyCode() == KeyEvent.VK_V) {   //ctrl+v is pressed (isCtrlActive == true)
+            checkAnswer('a');   //check, if answer is on display (for random char, it doesn't matter)
+        }                       
     }//GEN-LAST:event_txt_displayKeyPressed
 
+    /**
+     * Click action of button ")" 
+     * @param evt Action event
+     */
     private void btn_rightBracketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_rightBracketActionPerformed
         displayAdd(')');
     }//GEN-LAST:event_btn_rightBracketActionPerformed
 
+    /**
+     * Click action of button "(" 
+     * @param evt Action event
+     */
     private void btn_leftBracketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_leftBracketActionPerformed
         displayAdd('(');
     }//GEN-LAST:event_btn_leftBracketActionPerformed
 
+    /**
+     * Click action of button "hex" 
+     * @param evt Action event
+     */
     private void btn_hexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hexActionPerformed
         base = Base.hex;
         txt_display.requestFocus();
     }//GEN-LAST:event_btn_hexActionPerformed
 
+    /**
+     * Click action of button "dec" 
+     * @param evt Action event
+     */
     private void btn_decActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_decActionPerformed
         base = Base.dec;
         txt_display.requestFocus();
     }//GEN-LAST:event_btn_decActionPerformed
 
+    /**
+     * Click action of button "bin"
+     * @param evt Action event
+     */
     private void btn_binActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_binActionPerformed
         base = Base.bin;
         txt_display.requestFocus();
     }//GEN-LAST:event_btn_binActionPerformed
 
+    /**
+     * Click action of "Undo" button in main menu
+     * @param evt Action event
+     */
     private void mi_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_undoActionPerformed
         txt_display.setText(popUndo());
     }//GEN-LAST:event_mi_undoActionPerformed
 
+    /**
+     * Click action of "Redo" button in main menu
+     * @param evt Action event
+     */
     private void mi_redoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_redoActionPerformed
         txt_display.setText(popRedo());
     }//GEN-LAST:event_mi_redoActionPerformed
 
+    /**
+     * Display's key released action
+     * @param evt Key event
+     */
     private void txt_displayKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_displayKeyReleased
-        if (evt.getKeyCode() == KeyEvent.VK_CONTROL)
+        if (evt.getKeyCode() == KeyEvent.VK_CONTROL)    //ctrl is released
             isCtrlActive = false;
     }//GEN-LAST:event_txt_displayKeyReleased
 
+    /**
+     * Click action of "Paste" button in main menu
+     * @param evt Action event
+     */
     private void mi_pasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_pasteActionPerformed
         checkAnswer('a');
         txt_display.paste();
     }//GEN-LAST:event_mi_pasteActionPerformed
 
+    /**
+     * Click action of "Copy" button in main menu
+     * @param evt Action event
+     */
     private void mi_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_copyActionPerformed
         txt_display.copy();
     }//GEN-LAST:event_mi_copyActionPerformed
 
+    /**
+     * Click action of "About" button in main menu
+     * @param evt Action event
+     */
     private void mi_aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_aboutActionPerformed
         JOptionPane.showMessageDialog(this, "This is calculator created for IVS.\n\nAuthor(s): \nZnebejánek Tomáš\nŠvasta Michael\nBuchta Martin\nSichkaruk Roman \n\n\n© 2016", "About Calc v0.1", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mi_aboutActionPerformed
 
-    private void displayAdd(char value){   
-        //System.out.println("print: " );
-        checkAnswer(value);
+    /**
+     * Add char on display
+     * @param value Char, which is adding on display
+     */
+    private void displayAdd(char value){          
+        checkAnswer(value);             //check, if is answer on display
         String displayText = txt_display.getText();
-        pushUndo(displayText);
-        stackRedo.clear();
-        displayText += Character.toString(value);
-        txt_display.setText(displayText);
-        txt_display.requestFocus();
+        pushUndo(displayText);          //push into undo stack
+        clearRedo();                    //clear redo stack
+        
+        insertCharIntoCursorPosition(value, displayText);   //insert char onto cursor position in textfield
+      
+        txt_display.requestFocus();   
     }
     
+    /**
+     * Clear text from display
+     * @param all True clear all text on display, False delete char before cursor
+     */
     private void displayClear(boolean all){
         String tmpText = txt_display.getText();
-        pushUndo(tmpText);
-        stackRedo.clear();
+        pushUndo(tmpText);  //undo stack
+        clearRedo();        //redo stack
         if (all) {
-            txt_display.setText("");
+            txt_display.setText("");    //clear all
         }
-        else if (!tmpText.isEmpty()) {            
-            String displayText = tmpText.substring(0, tmpText.length()-1);
-            txt_display.setText(displayText);
+        else if (!tmpText.isEmpty()) {                  //is not epmty
+            insertCharIntoCursorPosition(' ', tmpText); //delete char before cursor
         }
-        checkEmptyDisplay();
+        checkEmptyDisplay();        //reset math library for clear display
         txt_display.requestFocus();
     }
     
+    /**
+     * Insert char (or delete char) onto cursor position in textfield
+     * @param value Char, which is inserting, or ' ' for deleting char
+     * @param displayText String of display's text
+     */
+    private void insertCharIntoCursorPosition(char value, String displayText){              
+        int cursorPosition = txt_display.getCaretPosition();    //get cursor position
+        
+        String tmp;
+        String tmp2 = displayText.substring(cursorPosition);    //second part of display's text
+        if (value != ' '){                                      //inserting
+            tmp = displayText.substring(0, cursorPosition);     //first part of display's text
+            tmp += Character.toString(value);                   //insert char on end of first part of text
+            cursorPosition++;                                   //increment cursor position
+        }
+        else{                                                   //deleting
+            tmp = displayText.substring(0, cursorPosition-1);   //first part of display's text without deleting char
+            cursorPosition--;                                   //decrement cursor position
+            isAnswer = false;                                   //answer is false
+        }            
+        
+        tmp += tmp2;                                            //add second part to first
+        txt_display.setText(tmp);                               //set display
+        txt_display.setCaretPosition(cursorPosition);           //set cursor position
+    }
+    
+    /**
+     * Check, if display is empty for reset math library
+     */
     private void checkEmptyDisplay(){
         if (txt_display.getText().isEmpty()) {
             math.reset();
         }
     }
             
-    
-    private void calculate(){
-        txt_display.requestFocus();
+    /**
+     * Calculate from display's text
+     */
+    private void calculate(){        
         if (txt_display.getText().length() == 0)
         { return; }
         
         try {            
-                math.calculateFormula(txt_display.getText(), base.getValue());  
-                setDisplay();
-        } catch (Exception ex) {
+            math.calculateFormula(txt_display.getText(), base.getValue());  //calculate from math library
+            setDisplay();                                                   //set answer on display
+        } catch (Exception ex) {    //catch exception
             JOptionPane.showMessageDialog(this, "Bad format of input data!", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+        txt_display.requestFocus();
     }
        
+    /**
+     * Get answer of calculate from math library
+     */
     private void setDisplay(){
         txt_display.setText(math.getValue().toString());
         isAnswer = true;
     }
     
+    /**
+     * Check, if answer is on display
+     * @param key Char, which is adding on display
+     */
     private void checkAnswer(char key){
-        switch (key) {
+        switch (key) {  //for operation answer is false, for numeric value is true
             case '+':
             case '-':
             case '!':
@@ -967,8 +1158,9 @@ public class Calc extends javax.swing.JFrame {
                 isAnswer = false;
 	}
         
-        if (isAnswer){
-            displayClear(true);
+        
+        if (isAnswer){          //if answer is true
+            displayClear(true); //clear display
             isAnswer = false;
         }
     } 
