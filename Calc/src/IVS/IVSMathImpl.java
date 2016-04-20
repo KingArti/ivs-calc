@@ -205,7 +205,11 @@ public class IVSMathImpl implements IVSMath {
 				innerValue = result;
 			} else {
 				try {
-					innerValue = new IVSNumber(Integer.toString(base), base);
+					if (result.isInteger()) {
+						innerValue = new IVSNumber(Integer.toString(result.getIntValue(), base), base);
+					} else {
+						innerValue = result;
+					}
 				} catch (IVSNumberException e) {
 					innerValue = result;
 				}
@@ -373,7 +377,7 @@ class IntegerFormulaParser {
 	 * @param operator Operator
 	 * @param operand1 Operand
 	 * @param operand2 Operand. Note that when calculating factorial, this value is ignored
-	 * @return IVSNumber value
+	 * @return
 	 * @throws IVSInvalidFormulaException  Thrown when invalid operator is given
 	 */
 	private IVSNumber handleOperation(String operator, IVSNumber operand1, IVSNumber operand2) throws IVSInvalidFormulaException {
