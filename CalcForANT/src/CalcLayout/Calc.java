@@ -6,6 +6,7 @@ import IVS.IVSMathImpl;
 import IVS.IVSNumber;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 
@@ -36,7 +37,7 @@ public class Calc extends javax.swing.JFrame {
      * Base of operations
      */
     private enum Base { 
-        bin(2), dec(10), hex(16);
+        bin(2), oct(8), dec(10), hex(16);
         
         private final int value;
         private Base(int value){
@@ -51,7 +52,51 @@ public class Calc extends javax.swing.JFrame {
     /**
      * New instance of base
      */
-    Base base = Base.dec;     
+    Base base = Base.dec;   
+    
+    /**
+     * List of buttons, which are enabled only in hexadecimal mode
+     */
+    List<JButton> listOfNonDecimal = new ArrayList<>();
+    /**
+     * Inicialization of list of hexadecimal buttons
+     */
+    private void initListOfNonDecimal(){
+        listOfNonDecimal.add(btn_a);
+        listOfNonDecimal.add(btn_b);
+        listOfNonDecimal.add(btn_c);
+        listOfNonDecimal.add(btn_d);
+        listOfNonDecimal.add(btn_e);
+        listOfNonDecimal.add(btn_f);
+    }
+    
+    /**
+     * List of buttons, which are enabled only in decimal and hexadecimal mode
+     */
+    List<JButton> listOfNonOctal = new ArrayList<>();
+    /**
+     * Inicialization of list of decimal and hexadecimal buttons
+     */
+    private void initListOfNonOctal(){
+        listOfNonOctal.add(btn_8);
+        listOfNonOctal.add(btn_9);
+    }
+    
+    /**
+     * List of buttons, which are enabled only in octal, decimal and hexadecimal mode
+     */
+    List<JButton> listOfNonBinary = new ArrayList<>();
+    /**
+     * Inicialization of list of octal, decimal and hexadecimal buttons
+     */
+    private void initListOfNonBinary(){
+        listOfNonBinary.add(btn_2);
+        listOfNonBinary.add(btn_3);
+        listOfNonBinary.add(btn_4);
+        listOfNonBinary.add(btn_5);
+        listOfNonBinary.add(btn_6);
+        listOfNonBinary.add(btn_7);
+    }
     
     /**
      * Status of control key
@@ -206,7 +251,9 @@ public class Calc extends javax.swing.JFrame {
     public Calc() {
         initComponents();
         txt_display.requestFocus();
-        
+        initListOfNonBinary();
+        initListOfNonOctal();
+        initListOfNonDecimal();        
     }
 
     /**
@@ -245,9 +292,13 @@ public class Calc extends javax.swing.JFrame {
         btn_abs = new javax.swing.JButton();
         btn_rightBracket = new javax.swing.JButton();
         btn_leftBracket = new javax.swing.JButton();
-        btn_hex = new javax.swing.JButton();
-        btn_dec = new javax.swing.JButton();
-        btn_bin = new javax.swing.JButton();
+        cmb_mode = new javax.swing.JComboBox<>();
+        btn_a = new javax.swing.JButton();
+        btn_b = new javax.swing.JButton();
+        btn_c = new javax.swing.JButton();
+        btn_d = new javax.swing.JButton();
+        btn_e = new javax.swing.JButton();
+        btn_f = new javax.swing.JButton();
         txt_display = new javax.swing.JTextField();
         bar_mainMenu = new javax.swing.JMenuBar();
         btn_edit = new javax.swing.JMenu();
@@ -259,8 +310,13 @@ public class Calc extends javax.swing.JFrame {
         mi_about = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Kalkulačka v0.1");
+        setTitle("Calc v0.1");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         btn_0.setText("0");
         btn_0.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -400,7 +456,7 @@ public class Calc extends javax.swing.JFrame {
             }
         });
 
-        btn_clear.setText("C");
+        btn_clear.setText("CLR");
         btn_clear.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btn_clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -477,30 +533,59 @@ public class Calc extends javax.swing.JFrame {
             }
         });
 
-        btn_hex.setText("hex");
-        btn_hex.setToolTipText("Hexadecimal mode");
-        btn_hex.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_hex.addActionListener(new java.awt.event.ActionListener() {
+        cmb_mode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Binary", "Octal", "Decimal", "Hexadecimal" }));
+        cmb_mode.setSelectedIndex(3);
+        cmb_mode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_hexActionPerformed(evt);
+                cmb_modeActionPerformed(evt);
             }
         });
 
-        btn_dec.setText("dec");
-        btn_dec.setToolTipText("Decimal mode");
-        btn_dec.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_dec.addActionListener(new java.awt.event.ActionListener() {
+        btn_a.setText("A");
+        btn_a.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_a.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_decActionPerformed(evt);
+                btn_aActionPerformed(evt);
             }
         });
 
-        btn_bin.setText("bin");
-        btn_bin.setToolTipText("Binary mode");
-        btn_bin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_bin.addActionListener(new java.awt.event.ActionListener() {
+        btn_b.setText("B");
+        btn_b.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_b.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_binActionPerformed(evt);
+                btn_bActionPerformed(evt);
+            }
+        });
+
+        btn_c.setText("C");
+        btn_c.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_c.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cActionPerformed(evt);
+            }
+        });
+
+        btn_d.setText("D");
+        btn_d.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_d.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_dActionPerformed(evt);
+            }
+        });
+
+        btn_e.setText("E");
+        btn_e.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_e.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_eActionPerformed(evt);
+            }
+        });
+
+        btn_f.setText("F");
+        btn_f.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_f.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_fActionPerformed(evt);
             }
         });
 
@@ -509,82 +594,83 @@ public class Calc extends javax.swing.JFrame {
         pnl_keyboardLayout.setHorizontalGroup(
             pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(btn_4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_mul, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_div, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnl_keyboardLayout.createSequentialGroup()
+                .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                        .addComponent(btn_exp, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_sqrt, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_abs, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_pi, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                        .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btn_7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btn_4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                                .addComponent(btn_6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_mul, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_div, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                                .addComponent(btn_9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btn_3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                        .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                                .addComponent(btn_1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                                .addComponent(btn_0, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_point, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_neg, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btn_0, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                                .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_sub, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btn_equal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(btn_point, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_neg, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                        .addComponent(btn_bin, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_dec, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_hex, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_leftBracket, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_rightBracket, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(12, 12, 12))
+                        .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_sub, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_equal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(pnl_keyboardLayout.createSequentialGroup()
+                .addComponent(btn_exp, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_sqrt, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_abs, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_pi, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnl_keyboardLayout.createSequentialGroup()
+                .addComponent(cmb_mode, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_leftBracket, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_rightBracket, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnl_keyboardLayout.createSequentialGroup()
+                .addComponent(btn_7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnl_keyboardLayout.createSequentialGroup()
+                .addComponent(btn_a, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_b, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_c, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_d, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_e, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_f, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnl_keyboardLayout.setVerticalGroup(
             pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_keyboardLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_bin, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_dec, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_hex, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_leftBracket, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_rightBracket, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_rightBracket, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmb_mode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_exp, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -592,15 +678,23 @@ public class Calc extends javax.swing.JFrame {
                     .addComponent(btn_fac, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_abs, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_pi, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                .addGap(25, 25, 25)
                 .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_d, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_e, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_f, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btn_a, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_b, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_c, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_keyboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -620,8 +714,7 @@ public class Calc extends javax.swing.JFrame {
                     .addComponent(btn_0, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_point, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_neg, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_equal, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(btn_equal, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         txt_display.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
@@ -697,10 +790,9 @@ public class Calc extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnl_keyboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txt_display)
-                        .addContainerGap())))
+                    .addComponent(pnl_keyboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txt_display))
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -708,8 +800,8 @@ public class Calc extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txt_display, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnl_keyboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(pnl_keyboard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
 
         pack();
@@ -966,33 +1058,6 @@ public class Calc extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_leftBracketActionPerformed
 
     /**
-     * Click action of button "hex" 
-     * @param evt Action event
-     */
-    private void btn_hexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hexActionPerformed
-        base = Base.hex;
-        txt_display.requestFocus();
-    }//GEN-LAST:event_btn_hexActionPerformed
-
-    /**
-     * Click action of button "dec" 
-     * @param evt Action event
-     */
-    private void btn_decActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_decActionPerformed
-        base = Base.dec;
-        txt_display.requestFocus();
-    }//GEN-LAST:event_btn_decActionPerformed
-
-    /**
-     * Click action of button "bin"
-     * @param evt Action event
-     */
-    private void btn_binActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_binActionPerformed
-        base = Base.bin;
-        txt_display.requestFocus();
-    }//GEN-LAST:event_btn_binActionPerformed
-
-    /**
      * Click action of "Undo" button in main menu
      * @param evt Action event
      */
@@ -1042,6 +1107,129 @@ public class Calc extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "This is calculator created for IVS.\n\nAuthor(s): \nZnebejánek Tomáš\nŠvasta Michael\nBuchta Martin\nSichkaruk Roman \n\n\n© 2016", "About Calc v0.1", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mi_aboutActionPerformed
 
+    /**
+     * Selection of new item in combobox
+     * @param evt Combobox action event
+     */
+    private void cmb_modeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_modeActionPerformed
+        if(cmb_mode.getSelectedIndex() == 0) {          //binary
+            base = Base.bin;
+            setEnabledButtons(listOfNonBinary, false);
+            setEnabledButtons(listOfNonOctal, false);
+            btn_point.setEnabled(false);
+            setVisibleHexButtons(false);
+            //btn_2.setEnabled(false);
+        }
+        else if(cmb_mode.getSelectedIndex() == 1) {     //octal
+            base = Base.oct;
+            setEnabledButtons(listOfNonBinary, true);
+            setEnabledButtons(listOfNonOctal, false);
+            btn_point.setEnabled(false);
+            setVisibleHexButtons(false);
+        }
+        else if(cmb_mode.getSelectedIndex() == 2) {     //decimal
+            base = Base.dec;
+            setEnabledButtons(listOfNonBinary, true);
+            setEnabledButtons(listOfNonOctal, true);
+            btn_point.setEnabled(true);
+            setVisibleHexButtons(false);
+        }
+        else if(cmb_mode.getSelectedIndex() == 3) {     //hexadecimal
+            base = Base.hex;
+            setEnabledButtons(listOfNonBinary, true);
+            setEnabledButtons(listOfNonOctal, true);
+            btn_point.setEnabled(false);
+            setVisibleHexButtons(true);
+        }
+        txt_display.requestFocus();
+    }//GEN-LAST:event_cmb_modeActionPerformed
+
+    /**
+     * Click action of button "e" 
+     * @param evt Action event
+     */
+    private void btn_eActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eActionPerformed
+        displayAdd('e');
+    }//GEN-LAST:event_btn_eActionPerformed
+
+    /**
+     * Click action of button "d" 
+     * @param evt Action event
+     */
+    private void btn_dActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_dActionPerformed
+        displayAdd('d');
+    }//GEN-LAST:event_btn_dActionPerformed
+
+    /**
+     * Click action of button "c" 
+     * @param evt Action event
+     */
+    private void btn_cActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cActionPerformed
+        displayAdd('c');
+    }//GEN-LAST:event_btn_cActionPerformed
+
+    /**
+     * Click action of button "b" 
+     * @param evt Action event
+     */
+    private void btn_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_bActionPerformed
+        displayAdd('b');
+    }//GEN-LAST:event_btn_bActionPerformed
+
+    /**
+     * Click action of button "a" 
+     * @param evt Action event
+     */
+    private void btn_aActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aActionPerformed
+        displayAdd('a');
+    }//GEN-LAST:event_btn_aActionPerformed
+
+    /**
+     * Click action of button "f" 
+     * @param evt Action event
+     */
+    private void btn_fActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fActionPerformed
+        displayAdd('f');
+    }//GEN-LAST:event_btn_fActionPerformed
+
+    /**
+     * Activating window's form
+     * @param evt Action event
+     */
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        cmb_mode.setSelectedIndex(2);   //select decimal mode
+    }//GEN-LAST:event_formWindowActivated
+
+    /**
+     * Set state of buttons for mode
+     * @param buttonsList List of buttons, which is working with
+     * @param state Boolean value, which is setted
+     */
+    private void setEnabledButtons(List<JButton> buttonsList, boolean state){
+        for (JButton b : buttonsList)
+                b.setEnabled(state);
+    }
+    
+    /**
+     * Setting visibility of hexadecimal buttons
+     * @param state Boolean value, which is setted
+     */
+    private void setVisibleHexButtons(boolean state) {
+        if (btn_a.isVisible() && !state) {
+            int h = this.getSize().height;
+            int w = this.getSize().width;
+            this.setSize(w, h-45);
+        }
+        else if (!btn_a.isVisible() && state) {
+            int h = this.getSize().height;
+            int w = this.getSize().width;
+            this.setSize(w, h+45);
+        } 
+        
+        for (JButton b : listOfNonDecimal)
+            b.setVisible(state);        
+    }
+    
     /**
      * Add char on display
      * @param value Char, which is adding on display
@@ -1203,19 +1391,22 @@ public class Calc extends javax.swing.JFrame {
     private javax.swing.JButton btn_7;
     private javax.swing.JButton btn_8;
     private javax.swing.JButton btn_9;
+    private javax.swing.JButton btn_a;
     private javax.swing.JButton btn_abs;
     private javax.swing.JButton btn_add;
+    private javax.swing.JButton btn_b;
     private javax.swing.JButton btn_back;
-    private javax.swing.JButton btn_bin;
+    private javax.swing.JButton btn_c;
     private javax.swing.JButton btn_clear;
-    private javax.swing.JButton btn_dec;
+    private javax.swing.JButton btn_d;
     private javax.swing.JButton btn_div;
+    private javax.swing.JButton btn_e;
     private javax.swing.JMenu btn_edit;
     private javax.swing.JButton btn_equal;
     private javax.swing.JButton btn_exp;
+    private javax.swing.JButton btn_f;
     private javax.swing.JButton btn_fac;
     private javax.swing.JMenu btn_help;
-    private javax.swing.JButton btn_hex;
     private javax.swing.JButton btn_leftBracket;
     private javax.swing.JButton btn_mul;
     private javax.swing.JButton btn_neg;
@@ -1224,6 +1415,7 @@ public class Calc extends javax.swing.JFrame {
     private javax.swing.JButton btn_rightBracket;
     private javax.swing.JButton btn_sqrt;
     private javax.swing.JButton btn_sub;
+    private javax.swing.JComboBox<String> cmb_mode;
     private javax.swing.JMenuItem mi_about;
     private javax.swing.JMenuItem mi_copy;
     private javax.swing.JMenuItem mi_paste;
