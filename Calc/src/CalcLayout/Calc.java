@@ -99,6 +99,23 @@ public class Calc extends javax.swing.JFrame {
     }
     
     /**
+     * List of buttons, which are enabled only in decimal mode
+     */
+    List<JButton> listOfOnlyDecimal = new ArrayList<>();
+    /**
+     * Inicialization of list of decimal buttons
+     */
+    private void initListOfOnlyDecimal(){
+        listOfOnlyDecimal.add(btn_fac);
+        listOfOnlyDecimal.add(btn_abs);
+        listOfOnlyDecimal.add(btn_exp);
+        listOfOnlyDecimal.add(btn_sqrt);
+        listOfOnlyDecimal.add(btn_pi);
+        listOfOnlyDecimal.add(btn_neg);
+        listOfOnlyDecimal.add(btn_point);
+    }
+    
+    /**
      * Status of control key
      */
     boolean isCtrlActive = false;   
@@ -253,7 +270,8 @@ public class Calc extends javax.swing.JFrame {
         txt_display.requestFocus();
         initListOfNonBinary();
         initListOfNonOctal();
-        initListOfNonDecimal();        
+        initListOfNonDecimal();    
+        initListOfOnlyDecimal();
     }
 
     /**
@@ -943,8 +961,7 @@ public class Calc extends javax.swing.JFrame {
      * @param evt Action event
      */
     private void btn_equalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_equalActionPerformed
-        pushUndo(txt_display.getText());            //push stack of undo actions
-        clearRedo();                                //clear stack of redo actions
+
         calculate();
     }//GEN-LAST:event_btn_equalActionPerformed
 
@@ -1027,14 +1044,16 @@ public class Calc extends javax.swing.JFrame {
                 && evt.getKeyCode() != KeyEvent.VK_END
                 && evt.getKeyCode() != KeyEvent.VK_LEFT
                 && evt.getKeyCode() != KeyEvent.VK_RIGHT) { //else if ctrl is not active, and cursor is not moving
-            pushUndo(txt_display.getText());                //push stack of undo actions
-            clearRedo();                                    //clear stack of redo actions
+            
         
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {    //if enter is pressed
                 calculate();                                //calculate
             }  
-            else if(evt.getKeyCode() != KeyEvent.VK_SHIFT && evt.getKeyCode() != KeyEvent.VK_ALT_GRAPH) //if not pressed shift or alt gr
+            else if(evt.getKeyCode() != KeyEvent.VK_SHIFT && evt.getKeyCode() != KeyEvent.VK_ALT_GRAPH) {   //if not pressed shift or alt gr
+                pushUndo(txt_display.getText());                //push stack of undo actions
+                clearRedo();                                    //clear stack of redo actions
                 checkAnswer(evt.getKeyChar());      //check, if answer is on display (for actual pressed key)
+            }
         }
         else if(evt.getKeyCode() == KeyEvent.VK_V) {   //ctrl+v is pressed (isCtrlActive == true)
             checkAnswer('a');   //check, if answer is on display (for random char, it doesn't matter)
@@ -1112,11 +1131,13 @@ public class Calc extends javax.swing.JFrame {
      * @param evt Combobox action event
      */
     private void cmb_modeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_modeActionPerformed
+        calculate();        
+        
         if(cmb_mode.getSelectedIndex() == 0) {          //binary
             base = Base.bin;
             setEnabledButtons(listOfNonBinary, false);
             setEnabledButtons(listOfNonOctal, false);
-            btn_point.setEnabled(false);
+            setEnabledButtons(listOfOnlyDecimal, false);
             setVisibleHexButtons(false);
             //btn_2.setEnabled(false);
         }
@@ -1124,23 +1145,24 @@ public class Calc extends javax.swing.JFrame {
             base = Base.oct;
             setEnabledButtons(listOfNonBinary, true);
             setEnabledButtons(listOfNonOctal, false);
-            btn_point.setEnabled(false);
+            setEnabledButtons(listOfOnlyDecimal, false);            
             setVisibleHexButtons(false);
         }
         else if(cmb_mode.getSelectedIndex() == 2) {     //decimal
             base = Base.dec;
             setEnabledButtons(listOfNonBinary, true);
             setEnabledButtons(listOfNonOctal, true);
-            btn_point.setEnabled(true);
+            setEnabledButtons(listOfOnlyDecimal, true);
             setVisibleHexButtons(false);
         }
         else if(cmb_mode.getSelectedIndex() == 3) {     //hexadecimal
             base = Base.hex;
             setEnabledButtons(listOfNonBinary, true);
             setEnabledButtons(listOfNonOctal, true);
-            btn_point.setEnabled(false);
+            setEnabledButtons(listOfOnlyDecimal, false);
             setVisibleHexButtons(true);
         }
+        
         txt_display.requestFocus();
     }//GEN-LAST:event_cmb_modeActionPerformed
 
@@ -1301,9 +1323,13 @@ public class Calc extends javax.swing.JFrame {
     /**
      * Calculate from display's text
      */
-    private void calculate(){        
+    private void calculate(){    
+        
         if (txt_display.getText().length() == 0)
         { return; }
+        
+        pushUndo(txt_display.getText());            //push stack of undo actions
+        clearRedo();                                //clear stack of redo actions
         
         try {            
             math.calculateFormula(txt_display.getText(), base.getValue());  //calculate from math library
@@ -1317,7 +1343,7 @@ public class Calc extends javax.swing.JFrame {
     /**
      * Get answer of calculate from math library
      */
-    private void setDisplay(){
+    private void setDisplay(){        
         txt_display.setText(math.getValue().toString());
         isAnswer = true;
     }
