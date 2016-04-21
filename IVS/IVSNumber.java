@@ -3,7 +3,7 @@ package IVS;
 /**
  * @file IVSNumber.java
  * @author Tom
- * @version 1.1
+ * @version 1.2
  * Represents universal number for math library. Handles all necessary conversions, so no special data types are required
  *
  */
@@ -74,9 +74,13 @@ public class IVSNumber {
 		if (type == TYPE.INT) {
 			return "" + intValue;
 		} else if (type == TYPE.DOUBLE) {
-			return "" + doubleValue;
+			if (doubleValue % 1 == 0) {
+				return ((int) doubleValue) + "";
+			} else {
+				return "" + doubleValue;
+			}
 		} else if (type == TYPE.INT_BASE) {
-			return Integer.toString(intValue, base);
+			return Integer.toString(intValue, base).toUpperCase();
 		}
 		return invalidValue;
 	}
