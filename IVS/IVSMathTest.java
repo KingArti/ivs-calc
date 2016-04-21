@@ -8,6 +8,77 @@ public class IVSMathTest extends Assert {
 
 	private IVSMath lib;
 
+	private static final IVSNumber getByObject(Object object) {
+		if (object == null) {
+			return null;
+		} else {
+			if (object instanceof Double) {
+				return new IVSNumber((double) object);
+			} else {
+				return new IVSNumber((int) object);
+			}
+		}
+	}
+
+	private static final boolean advArithmeticsAssert(IVSMath lib, String op, Object operand1, Object operand2, Object result) {
+		return advArithmeticsAssert(lib, op, operand1, operand2, result, false, false);
+	}
+
+	private static final boolean advArithmeticsAssert(IVSMath lib, String op, Object operand1, Object operand2, Object result, boolean allowZeroDivision, boolean allowNegativeException) {
+		final IVSNumber op1 = getByObject(operand1);
+		final IVSNumber op2 = getByObject(operand2);
+		final IVSNumber res = getByObject(result);
+		lib.setValue(op1);
+		switch (op) {
+			case "+":
+				lib.add(op2);
+			break;
+			case "-":
+				lib.sub(op2);
+			break;
+			case "*":
+				lib.mul(op2);
+			break;
+			case "/":
+				try {
+					lib.div(op2);
+				} catch (IVSDivisionByZeroException e) {
+					return allowZeroDivision;
+				}
+			break;
+			case "!":
+				try {
+					if (op2 == null) {
+						lib.fac();
+					} else {
+						lib.fac(op2);
+					}
+				} catch (IVSNegativeValueException e) {
+					return allowNegativeException;
+				}
+			break;
+			case "|":
+				lib.abs();
+			break;
+			case "'":
+				try {
+					lib.sqrt();
+				} catch (IVSNegativeValueException e) {
+					return allowNegativeException;
+				}
+			break;
+			case "E":
+				if (op2 == null) {
+					lib.setExp();
+				} else {
+					lib.setExp(op2);
+				}
+			break;
+		}
+		IVSNumber libValue = lib.getValue();
+		return libValue.equals(res);
+	}
+
 	@Before
 	public final void reset() {
 		lib = new IVSMathImpl();
@@ -25,132 +96,86 @@ public class IVSMathTest extends Assert {
 
 	@Test
 	public final void testAdd() {
-		lib.setValue(new IVSNumber(5));
-		lib.add(new IVSNumber(42));
-		assertEquals(lib.getValue(), new IVSNumber(5 + 42));
-		lib.setValue(new IVSNumber(5));
-		lib.add(new IVSNumber(-42));
-		assertEquals(lib.getValue(), new IVSNumber(5 - 42));
-		lib.setValue(new IVSNumber(5));
-		lib.add(new IVSNumber(42.99));
-		assertEquals(lib.getValue(), new IVSNumber(5 + 42.99));
-		lib.setValue(new IVSNumber(5));
-		lib.add(null);
-		assertEquals(lib.getValue(), new IVSNumber(5));
+		assertTrue(advArithmeticsAssert(lib, "+", 1, 2, 3));
+		assertTrue(advArithmeticsAssert(lib, "+", 0, 1.0, 1));
+		assertTrue(advArithmeticsAssert(lib, "+", -5, 2, -3));
+		assertTrue(advArithmeticsAssert(lib, "+", 0.7, 2, 2.7));
+		assertTrue(advArithmeticsAssert(lib, "+", 0.7, -2.5, -1.8));
+		assertTrue(advArithmeticsAssert(lib, "+", 0.7, null, 0.7));
+		assertTrue(advArithmeticsAssert(lib, "+", 0.7, Double.NaN, Double.NaN));
 	}
 
 	@Test
 	public final void testSub() {
-		lib.setValue(new IVSNumber(5));
-		lib.sub(new IVSNumber(42));
-		assertEquals(lib.getValue(), new IVSNumber(5 - 42));
-		lib.setValue(new IVSNumber(5));
-		lib.sub(new IVSNumber(-42));
-		assertEquals(lib.getValue(), new IVSNumber(5 + 42));
-		lib.setValue(new IVSNumber(5));
-		lib.sub(new IVSNumber(42.99));
-		assertEquals(lib.getValue(), new IVSNumber(5 - 42.99));
-		lib.setValue(new IVSNumber(5));
-		lib.sub(null);
-		assertEquals(lib.getValue(), new IVSNumber(5));
+		assertTrue(advArithmeticsAssert(lib, "-", 1, 2, -1));
+		assertTrue(advArithmeticsAssert(lib, "-", 1, 0, 1));
+		assertTrue(advArithmeticsAssert(lib, "-", 0, 1.0, -1));
+		assertTrue(advArithmeticsAssert(lib, "-", -5, 2, -7));
+		assertTrue(advArithmeticsAssert(lib, "-", 0.7, 2, -1.3));
+		assertTrue(advArithmeticsAssert(lib, "-", 0.7, -2.5, 3.2));
+		assertTrue(advArithmeticsAssert(lib, "-", 0.7, null, 0.7));
+		assertTrue(advArithmeticsAssert(lib, "-", 0.7, Double.NaN, Double.NaN));
 	}
 
 	@Test
 	public final void testMul() {
-		lib.setValue(new IVSNumber(5));
-		lib.mul(new IVSNumber(42));
-		assertEquals(lib.getValue(), new IVSNumber(5 * 42));
-		lib.setValue(new IVSNumber(5));
-		lib.mul(new IVSNumber(-42));
-		assertEquals(lib.getValue(), new IVSNumber(5 * (-42)));
-		lib.setValue(new IVSNumber(5));
-		lib.mul(new IVSNumber(42.99));
-		assertEquals(lib.getValue(), new IVSNumber(5 * 42.99));
-		lib.setValue(new IVSNumber(5));
-		lib.mul(null);
-		assertEquals(lib.getValue(), new IVSNumber(5));
-		lib.mul(new IVSNumber(0));
-		assertEquals(lib.getValue(), new IVSNumber(0));
-		lib.mul(new IVSNumber(Double.NaN));
-		assertEquals(lib.getValue(), new IVSNumber(Double.NaN));
+		assertTrue(advArithmeticsAssert(lib, "*", 1, 2, 2));
+		assertTrue(advArithmeticsAssert(lib, "*", 1, 0, 0));
+		assertTrue(advArithmeticsAssert(lib, "*", 0, 1.0, 0));
+		assertTrue(advArithmeticsAssert(lib, "*", 2, 1.0, 2));
+		assertTrue(advArithmeticsAssert(lib, "*", -5, 2, -10));
+		assertTrue(advArithmeticsAssert(lib, "*", 0.7, 2, 1.4));
+		assertTrue(advArithmeticsAssert(lib, "*", 0.7, -2.5, -1.75));
+		assertTrue(advArithmeticsAssert(lib, "*", 0.7, null, 0.7));
 	}
 
 	@Test
 	public final void testDiv() {
-		lib.setValue(new IVSNumber(5));
-		lib.div(new IVSNumber(2));
-		assertEquals(lib.getValue(), new IVSNumber(2));
-		lib.setValue(new IVSNumber(5));
-		lib.div(new IVSNumber(2.0));
-		assertEquals(lib.getValue(), new IVSNumber(2.5));
-		lib.setValue(new IVSNumber(5));
-		try {
-			lib.div(new IVSNumber(0));
-			fail("Division by zero");
-		} catch (IVSDivisionByZeroException e) {
-		}
-		assertEquals(lib.getValue(), new IVSNumber(5));
-		try {
-			lib.div(new IVSNumber(0.0));
-			fail("Division by zero");
-		} catch (IVSDivisionByZeroException e) {
-		}
-		assertEquals(lib.getValue(), new IVSNumber(5));
+		assertTrue(advArithmeticsAssert(lib, "/", 1, 2, 0));
+		assertTrue(advArithmeticsAssert(lib, "/", 1.0, 2, 0.5));
+		assertTrue(advArithmeticsAssert(lib, "/", 1, 0, null, true, false));
+		assertTrue(advArithmeticsAssert(lib, "/", -1, 0, null, true, false));
+		assertTrue(advArithmeticsAssert(lib, "/", 0, 1.0, 0));
+		assertTrue(advArithmeticsAssert(lib, "/", 2, 1.0, 2));
+		assertTrue(advArithmeticsAssert(lib, "/", -5, 2.0, -2.5));
+		assertTrue(advArithmeticsAssert(lib, "/", 0.7, 2, 0.35));
+		assertTrue(advArithmeticsAssert(lib, "/", 0.7, -2.5, -0.7 / 2.5));
+		assertTrue(advArithmeticsAssert(lib, "/", 0.7, null, 0.7));
 	}
 
 	@Test
 	public final void testFacIVSNumber() {
-		lib.fac(new IVSNumber(5));
-		assertEquals(lib.getValue(), new IVSNumber(120));
-		lib.fac(new IVSNumber(0));
-		assertEquals(lib.getValue(), new IVSNumber(1));
-		try {
-			lib.fac(new IVSNumber(-1));
-			fail("Negative factorial");
-		} catch (IVSNegativeValueException e) {
-		}
-		assertEquals(lib.getValue(), new IVSNumber(1));
+		assertTrue(advArithmeticsAssert(lib, "!", 0, 0, 1));
+		assertTrue(advArithmeticsAssert(lib, "!", 1, 1, 1));
+		assertTrue(advArithmeticsAssert(lib, "!", 2, 2, 2));
+		assertTrue(advArithmeticsAssert(lib, "!", 5, 5, 120));
+		assertTrue(advArithmeticsAssert(lib, "!", -5, -5, 1, false, true));
 	}
 
 	@Test
 	public final void testFac() {
-		lib.setValue(new IVSNumber(5));
-		lib.fac();
-		assertEquals(lib.getValue(), new IVSNumber(120));
-		lib.setValue(new IVSNumber(0));
-		lib.fac();
-		assertEquals(lib.getValue(), new IVSNumber(1));
-		lib.setValue(new IVSNumber(-1));
-		try {
-			lib.fac();
-			fail("Negative factorial");
-		} catch (IVSNegativeValueException e) {
-		}
-		assertEquals(lib.getValue(), new IVSNumber(-1));
+		assertTrue(advArithmeticsAssert(lib, "!", 0, null, 1));
+		assertTrue(advArithmeticsAssert(lib, "!", 1, null, 1));
+		assertTrue(advArithmeticsAssert(lib, "!", 2, null, 2));
+		assertTrue(advArithmeticsAssert(lib, "!", 5, null, 120));
+		assertTrue(advArithmeticsAssert(lib, "!", -5, null, 1, false, true));
 	}
 
 	@Test
 	public final void testAbs() {
-		lib.setValue(new IVSNumber(5));
-		lib.abs();
-		assertEquals(lib.getValue(), new IVSNumber(5));
-		lib.setValue(new IVSNumber(-5));
-		lib.abs();
-		assertEquals(lib.getValue(), new IVSNumber(5));
+		assertTrue(advArithmeticsAssert(lib, "|", 0, null, 0));
+		assertTrue(advArithmeticsAssert(lib, "|", 5, null, 5));
+		assertTrue(advArithmeticsAssert(lib, "|", -5, null, 5));
+		assertTrue(advArithmeticsAssert(lib, "|", Double.NaN, null, Double.NaN));
 	}
 
 	@Test
 	public final void testSqrt() {
-		lib.setValue(new IVSNumber(25));
-		lib.sqrt();
-		assertEquals(lib.getValue(), new IVSNumber(5));
-		lib.setValue(new IVSNumber(-25));
-		try {
-			lib.sqrt();
-			fail("Negative square root");
-		} catch (IVSNegativeValueException e) {
-		}
-		assertEquals(lib.getValue(), new IVSNumber(-25));
+		assertTrue(advArithmeticsAssert(lib, "'", 0, null, 0));
+		assertTrue(advArithmeticsAssert(lib, "'", 1, null, 1));
+		assertTrue(advArithmeticsAssert(lib, "'", 25, null, 5));
+		assertTrue(advArithmeticsAssert(lib, "'", -25, null, null, false, true));
+		assertTrue(advArithmeticsAssert(lib, "'", Double.NaN, null, Double.NaN));
 	}
 
 	@Test
@@ -173,56 +198,48 @@ public class IVSMathTest extends Assert {
 
 	@Test
 	public final void testSetExpIVSNumber() {
-		lib.setExp(new IVSNumber(5));
-		assertEquals(lib.getValue(), new IVSNumber(Math.exp(5)));
-		lib.setExp(new IVSNumber(-5));
-		assertEquals(lib.getValue(), new IVSNumber(Math.exp(-5)));
-		lib.setExp(new IVSNumber(0));
-		assertEquals(lib.getValue(), new IVSNumber(1));
+		assertTrue(advArithmeticsAssert(lib, "E", 5, null, Math.exp(5)));
+		assertTrue(advArithmeticsAssert(lib, "E", -5, null, Math.exp(-5)));
+		assertTrue(advArithmeticsAssert(lib, "E", 0, null, 1));
 	}
 
 	@Test
 	public final void testSetExp() {
-		lib.setValue(new IVSNumber(5));
-		lib.setExp();
-		assertEquals(lib.getValue(), new IVSNumber(Math.exp(5)));
-		lib.setValue(new IVSNumber(-5));
-		lib.setExp();
-		assertEquals(lib.getValue(), new IVSNumber(Math.exp(-5)));
-		lib.setValue(new IVSNumber(0));
-		lib.setExp();
-		assertEquals(lib.getValue(), new IVSNumber(1));
+		assertTrue(advArithmeticsAssert(lib, "E", null, 5, Math.exp(5)));
+		assertTrue(advArithmeticsAssert(lib, "E", null, -5, Math.exp(-5)));
+		assertTrue(advArithmeticsAssert(lib, "E", null, 0, 1));
+	}
+
+	private static boolean advFormulaAssert(IVSMath lib, String formula, int base, Object result, boolean allowNegative, boolean allowDivision, boolean allowInvalidFormula) {
+		lib.reset();
+		final IVSNumber res = getByObject(result);
+		try {
+			lib.calculateFormula(formula, base);
+			IVSNumber libValue = lib.getValue();
+			return libValue.equals(res);
+		} catch (IVSNegativeValueException e) {
+			return allowNegative;
+		} catch (IVSDivisionByZeroException e) {
+			return allowDivision;
+		} catch (IVSInvalidFormulaException e) {
+			return allowInvalidFormula;
+		}
 	}
 
 	@Test
 	public final void testCalculateFormula() {
-		try {
-			lib.calculateFormula("1 + 1", 10);
-		} catch (IVSNegativeValueException | IVSDivisionByZeroException | IVSInvalidFormulaException e) {
-			fail("Valid formula");
-		}
-		assertEquals(lib.getValue(), new IVSNumber(2));
-		try {
-			lib.calculateFormula("1 /(5*0)", 10);
-		} catch (IVSNegativeValueException | IVSInvalidFormulaException e) {
-			fail("Valid formula");
-		} catch (IVSDivisionByZeroException e) {
-			try {
-				lib.calculateFormula("B+B", 16);
-			} catch (IVSNegativeValueException | IVSDivisionByZeroException | IVSInvalidFormulaException ee) {
-				fail("Valid formula");
-			}
-			assertEquals(lib.getValue(), new IVSNumber(22));
-			try {
-				lib.calculateFormula("B+B+", 16);
-			} catch (IVSNegativeValueException | IVSDivisionByZeroException ee) {
-				fail("Valid formula");
-			} catch (IVSInvalidFormulaException ee) {
-				return;
-			}
-			fail("Invalid formula");
-		}
-		fail("Invalid formula");
+		assertTrue(advFormulaAssert(lib, "1+1", 10, 2, false, false, false));
+		assertTrue(advFormulaAssert(lib, "1/(5*0)", 10, null, false, true, false));
+		assertTrue(advFormulaAssert(lib, "B+B", 16, 22, false, false, false));
+		assertTrue(advFormulaAssert(lib, "B+B+", 16, null, false, false, true));
+		assertTrue(advFormulaAssert(lib, "5+0.1", 10, 5.1, false, false, false));
+		assertTrue(advFormulaAssert(lib, "A+1", 16, 11, false, false, false));
+		assertTrue(advFormulaAssert(lib, "5!", 10, 120, false, false, false));
+		assertTrue(advFormulaAssert(lib, "-5!", 10, null, true, false, false));
+		assertTrue(advFormulaAssert(lib, "-(5!)", 10, -120, true, false, false));
+		assertTrue(advFormulaAssert(lib, "2^8", 10, 256, false, false, false));
+		assertTrue(advFormulaAssert(lib, "1010+1", 2, 11, false, false, false));
+		assertTrue(advFormulaAssert(lib, "A+B", 10, null, false, false, true));
+		assertTrue(advFormulaAssert(lib, "A+B", 17, 21, false, false, true));
 	}
-
 }

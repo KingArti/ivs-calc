@@ -119,7 +119,7 @@ public class IVSMathImpl implements IVSMath {
 	}
 
 	@Override
-	public void fac() {
+	public void fac() throws IVSNegativeValueException {
 		fac(innerValue);
 	}
 
@@ -139,7 +139,7 @@ public class IVSMathImpl implements IVSMath {
 	}
 
 	@Override
-	public void sqrt() {
+	public void sqrt() throws IVSNegativeValueException {
 		if (innerValue.isInteger()) {
 			int value = innerValue.getIntValue();
 			if (value < 0) {
@@ -205,7 +205,11 @@ public class IVSMathImpl implements IVSMath {
 				innerValue = result;
 			} else {
 				try {
-					innerValue = new IVSNumber(Integer.toString(base), base);
+					if (result.isInteger()) {
+						innerValue = new IVSNumber(Integer.toString(result.getIntValue(), base), base);
+					} else {
+						innerValue = result;
+					}
 				} catch (IVSNumberException e) {
 					innerValue = result;
 				}
@@ -222,15 +226,33 @@ public class IVSMathImpl implements IVSMath {
 				if (innerValue.isInteger()) {
 					innerValue = new IVSNumber(Math.pow(innerValue.getIntValue(), value.getIntValue()));
 				} else {
-					innerValue = new IVSNumber(Math.pow((double) innerValue.getIntValue(), value.getDoubleValue()));
+					innerValue = new IVSNumber(Math.pow(innerValue.getDoubleValue(), ((double) value.getIntValue())));
 				}
 			} else {
 				if (innerValue.isInteger()) {
-					innerValue = new IVSNumber(Math.pow((double) innerValue.getIntValue(), value.getDoubleValue()));
+					innerValue = new IVSNumber(Math.pow(((double) innerValue.getIntValue()), value.getDoubleValue()));
 				} else {
 					innerValue = new IVSNumber(Math.pow(innerValue.getDoubleValue(), value.getDoubleValue()));
 				}
 			}
+		}
+	}
+
+	@Override
+	public void changeBase(int base) throws IVSNegativeValueException {
+		if (base <= 0) {
+			throw new IVSNegativeValueException();
+		}
+		int val = 0;
+		if (innerValue.isInteger()) {
+			val = innerValue.getIntValue();
+		} else {
+			val = (int) innerValue.getDoubleValue();
+		}
+		try {
+			innerValue = new IVSNumber(Integer.toString(val, base));
+		} catch (IVSNumberException e) {
+			throw new IVSNegativeValueException();
 		}
 	}
 }

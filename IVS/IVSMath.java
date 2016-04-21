@@ -3,12 +3,21 @@ package IVS;
 /**
  * @file IVSMath.java
  * @author Tom
- * @version 1.2
+ * @version 1.3
+ * @todo Add the rest of the operations
  * Represents math library interface
  *
  */
 public interface IVSMath {
 
+	/**
+	 * Changes base of inner value
+	 * Note that decimal places are trimmed
+	 * @param base New base of inner value
+	 * @throws IVSNegativeValueException Thrown when invalid base is given
+	 */
+	public void changeBase(int base) throws IVSNegativeValueException;
+	
 	/**
 	 * Reset the inner value to default (0)
 	 */
@@ -19,7 +28,7 @@ public interface IVSMath {
 	 * @param value Value to be used as exponent
 	 */
 	public void pow(IVSNumber value);
-	
+
 	/**
 	 * Adds value to inner value
 	 * @param value Value to be added. Note that when null is used, no operation is done.
@@ -58,7 +67,7 @@ public interface IVSMath {
 	 * Calculates factorial from inner value
 	 * @throws IVSNegativeValueException Thrown when inner value is not positive integer or zero
 	 */
-	public void fac();
+	public void fac() throws IVSNegativeValueException;
 
 	/**
 	 * Calculates absolute value from inner value
